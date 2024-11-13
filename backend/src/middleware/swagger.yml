@@ -1,0 +1,383 @@
+openapi: 3.0.0
+info:
+  title: TODO Management API
+  description: API for managing users, tasks, and task assignments in a TODO application.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:5000/api/v1
+    description: Local server
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        avatar:
+          type: string
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+          description: The JWT token for authenticated requests
+        user:
+          $ref: "#/components/schemas/User"
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+        user_id:
+          type: string
+        title:
+          type: string
+        duedate:
+          type: string
+          format: date
+        status:
+          type: string
+          enum: [completed, pending]
+        priority:
+          type: string
+          enum: [High, Medium, Low]
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    Assignment:
+      type: object
+      properties:
+        id:
+          type: string
+        task_id:
+          type: string
+        user_id:
+          type: string
+        role:
+          type: string
+          enum: [assignee, creator, viewer]
+
+security:
+  - bearerAuth: []
+
+paths:
+  /users:
+    post:
+      summary: Create a new user
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "201":
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    example: 201
+                  message:
+                    type: string
+                    example: "User Created Successfully"
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        example: "67342f3626d63c2400d8aeeb"
+                      code:
+                        type: integer
+                        example: 201
+                      name:
+                        type: string
+                        example: "string"
+                      email:
+                        type: string
+                        example: "string"
+                      createdAt:
+                        type: string
+                        format: date-time
+                        example: "2024-11-13T00:00:00Z"
+                      updatedAt:
+                        type: string
+                        format: date-time
+                        example: "2024-11-13T00:00:00Z"
+                  links:
+                    type: object
+                    properties:
+                      self:
+                        type: string
+                        example: "/users/67342f3626d63c2400d8aeeb"
+
+  /users/{userId}:
+    get:
+      summary: Get a user by ID
+      tags:
+        - Users
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          description: User not found
+
+  /users/me:
+    get:
+      summary: Get the currently authenticated user's data
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: The authenticated user's profile information
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Unauthorized - Authentication is required
+
+  /auth/login/local:
+    post:
+      summary: Login and get JWT token
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: User's email
+                  example: "johndoe@example.com"
+                password:
+                  type: string
+                  description: User's password
+                  example: "password123"
+      responses:
+        "200":
+          description: Successfully logged in and received token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "401":
+          description: Invalid credentials
+        "400":
+          description: Bad request, missing email or password
+
+  /tasks:
+    get:
+      summary: Get all tasks
+      tags:
+        - Tasks
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: A list of tasks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Task"
+    post:
+      summary: Create a new task
+      tags:
+        - Tasks
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Task"
+      responses:
+        "201":
+          description: Task created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+
+  /tasks/{taskId}:
+    get:
+      summary: Get a task by ID
+      tags:
+        - Tasks
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Task found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+        "404":
+          description: Task not found
+    put:
+      summary: Update a task
+      tags:
+        - Tasks
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Task"
+      responses:
+        "200":
+          description: Task updated successfully
+    delete:
+      summary: Delete a task
+      tags:
+        - Tasks
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerAuth: []
+      responses:
+        "204":
+          description: Task deleted successfully
+
+  /assignments:
+    get:
+      summary: Get all task assignments
+      tags:
+        - Assignments
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: A list of task assignments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Assignment"
+    post:
+      summary: Assign a user to a task
+      tags:
+        - Assignments
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Assignment"
+      responses:
+        "201":
+          description: Assignment created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Assignment"
+
+  /assignments/{assignmentId}:
+    get:
+      summary: Get an assignment by ID
+      tags:
+        - Assignments
+      parameters:
+        - name: assignmentId
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Assignment found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Assignment"
+        "404":
+          description: Assignment not found
+    put:
+      summary: Update an assignment role
+      tags:
+        - Assignments
+      parameters:
+        - name: assignmentId
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Assignment"
+      responses:
+        "200":
+          description: Assignment updated
