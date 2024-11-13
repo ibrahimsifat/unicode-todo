@@ -15,6 +15,17 @@ components:
       scheme: bearer
       bearerFormat: JWT
   schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          example: 400
+        name:
+          type: string
+        message:
+          type: string
+
     User:
       type: object
       properties:
@@ -78,7 +89,7 @@ components:
           type: string
         role:
           type: string
-          enum: [assignee, creator, viewer]
+          enum: [assignee, viewer]
 
 paths:
   /users:
@@ -98,43 +109,19 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  code:
-                    type: integer
-                    example: 201
-                  message:
-                    type: string
-                    example: "User Created Successfully"
-                  data:
-                    type: object
-                    properties:
-                      id:
-                        type: string
-                        example: "67342f3626d63c2400d8aeeb"
-                      code:
-                        type: integer
-                        example: 201
-                      name:
-                        type: string
-                        example: "string"
-                      email:
-                        type: string
-                        example: "string"
-                      createdAt:
-                        type: string
-                        format: date-time
-                        example: "2024-11-13T00:00:00Z"
-                      updatedAt:
-                        type: string
-                        format: date-time
-                        example: "2024-11-13T00:00:00Z"
-                  links:
-                    type: object
-                    properties:
-                      self:
-                        type: string
-                        example: "/users/67342f3626d63c2400d8aeeb"
+                $ref: "#/components/schemas/User"
+        "400":
+          description: Bad Request - Invalid user data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Conflict - Email already in use
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 
   /users/{userId}:
     get:
@@ -158,23 +145,44 @@ paths:
                 $ref: "#/components/schemas/User"
         "404":
           description: User not found
-
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized - Authentication required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
   /users/me:
     get:
-      summary: Get the currently authenticated user's data
+      summary: Get authenticated user's profile and associated tasks
+      description: Fetch the authenticated user's data along with tasks they created and assignments they are involved in (either as assignee or viewer).
       tags:
         - Users
       security:
         - bearerAuth: []
       responses:
         "200":
-          description: The authenticated user's profile information
+          description: Successfully retrieved user profile and tasks
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
+                properties:
+                  tasks:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Task"
+                  assignedTasks:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Assignment"
         "401":
-          description: Unauthorized - Authentication is required
+          description: Unauthorized. Authentication is required to access this route.
+        "500":
+          description: Internal Server Error. Something went wrong while processing the request.
 
   /auth/login/local:
     post:
@@ -203,10 +211,18 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/AuthResponse"
-        "401":
-          description: Invalid credentials
         "400":
-          description: Bad request, missing email or password
+          description: Bad Request - Missing email or password
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized - Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 
   /tasks:
     get:
@@ -224,6 +240,12 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Task"
+        "401":
+          description: Unauthorized - Authentication required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
     post:
       summary: Create a new task
       tags:
@@ -243,6 +265,24 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Task"
+        "400":
+          description: Bad Request - Invalid task data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized - Authentication required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "422":
+          description: Unprocessable Entity - Missing required fields
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 
   /tasks/{taskId}:
     get:
@@ -266,31 +306,16 @@ paths:
                 $ref: "#/components/schemas/Task"
         "404":
           description: Task not found
-    patch:
-      summary: Edit a task
-      tags:
-        - Tasks
-      parameters:
-        - name: taskId
-          in: path
-          required: true
-          schema:
-            type: string
-      security:
-        - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Task"
-      responses:
-        "200":
-          description: Task updated successfully
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Task"
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized - Authentication required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
     delete:
       summary: Delete a task
       tags:
@@ -306,6 +331,24 @@ paths:
       responses:
         "204":
           description: Task deleted successfully
+        "404":
+          description: Task not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized - Authentication required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden - You do not have permission to delete this task
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 
   /assignments:
     get:
@@ -323,6 +366,12 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Assignment"
+        "401":
+          description: Unauthorized - Authentication required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
     post:
       summary: Assign a user to a task
       tags:
@@ -342,6 +391,24 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Assignment"
+        "400":
+          description: Bad Request - Invalid assignment data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized - Authentication required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Conflict - User already assigned to this task
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 
   /assignments/{assignmentId}:
     get:
@@ -365,8 +432,18 @@ paths:
                 $ref: "#/components/schemas/Assignment"
         "404":
           description: Assignment not found
-    put:
-      summary: Update an assignment role
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized - Authentication required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      summary: Delete an assignment
       tags:
         - Assignments
       parameters:
@@ -377,16 +454,24 @@ paths:
             type: string
       security:
         - bearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Assignment"
       responses:
-        "200":
-          description: Assignment updated successfully
+        "204":
+          description: Assignment deleted successfully
+        "404":
+          description: Assignment not found
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Assignment"
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized - Authentication required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "403":
+          description: Forbidden - You do not have permission to delete this assignment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"

@@ -1,19 +1,18 @@
-const taskService = require("../../../../lib/task");
+const assignmentService = require("../../../../lib/assignment");
 
 /**
- * Delete a task.
+ * Create a new assignment.
  * @param {Object} req - The request object.
  * @param {Object} res - The response object.
  * @param {Function} next - The next middleware function.
  * @returns {void}
  */
-const destroy = async (req, res, next) => {
-  try {
-    const taskId = req.params.id;
-    const userId = req.user.id;
 
-    await taskService.deleteTask(taskId, userId);
-    req.io.emit("taskDeleted", taskId); // Emit task deletion event
+const destroy = async (req, res, next) => {
+  const { id: assignmentId } = req.params;
+
+  try {
+    await assignmentService.deleteAssignment(assignmentId, req.io);
     res.status(204).send();
   } catch (error) {
     next(error);
