@@ -1,5 +1,6 @@
 const socketIo = require("socket.io");
 const taskService = require("../task");
+const assignmentService = require("../assignment");
 
 /**
  * Set up and configure Socket.IO
@@ -13,7 +14,10 @@ const setupSocket = (server) => {
   io.on("connection", (socket) => {
     console.log("A user connected: " + socket.id);
 
-    // Handle task-related socket events
+    // --------------------
+    // Task-related socket events
+    // --------------------
+
     socket.on("taskCreated", async (taskData) => {
       try {
         const task = await taskService.createTask(taskData); // Call your taskService to create a task
@@ -41,6 +45,45 @@ const setupSocket = (server) => {
       }
     });
 
+    // --------------------
+    // Assignment-related socket events
+    // --------------------
+
+    socket.on("assignmentCreated", async (assignmentData) => {
+      try {
+        const assignment = await assignmentService.createAssignment(
+          assignmentData,
+          io,
+        ); // Call assignmentService to create an assignment
+        io.emit("assignmentCreated", assignment); // Emit the event to all connected clients
+      } catch (error) {
+        console.error("Error in assignmentCreated event:", error);
+      }
+    });
+
+    socket.on("assignmentUpdated", async (assignmentId, updates) => {
+      try {
+        const updatedAssignment = await assignmentService.updateAssignment(
+          assignmentId,
+          updates,
+          io,
+        );
+        io.emit("assignmentUpdated", updatedAssignment);
+      } catch (error) {
+        console.error("Error in assignmentUpdated event:", error);
+      }
+    });
+
+    socket.on("assignmentDeleted", async (assignmentId) => {
+      try {
+        await assignmentService.deleteAssignment(assignmentId, io);
+        io.emit("assignmentDeleted", assignmentId);
+      } catch (error) {
+        console.error("Error in assignmentDeleted event:", error);
+      }
+    });
+
+    // Handle client disconnection
     socket.on("disconnect", () => {
       console.log("User disconnected: " + socket.id);
     });

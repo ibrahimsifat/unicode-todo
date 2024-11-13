@@ -20,6 +20,18 @@ const UserSchema = new mongoose.Schema(
       required: true,
       select: false,
     },
+    tasks: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Task",
+      },
+    ],
+    assignedTasks: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Assignment",
+      },
+    ],
   },
   {
     timestamps: true,
