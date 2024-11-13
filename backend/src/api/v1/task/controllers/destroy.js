@@ -1,5 +1,4 @@
 const taskService = require("../../../../lib/task");
-const { badRequest } = require("../../../../lib/utils/error");
 
 /**
  * Delete a task.
