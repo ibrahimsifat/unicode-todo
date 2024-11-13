@@ -1,7 +1,7 @@
 const tokenService = require("../lib/utils/token");
-const { findUserByEmail } = require("../lib/user");
 const { authenticationError } = require("../lib/utils/error");
 const { getUserDTO } = require("../lib/utils");
+const { findUserByEmail } = require("../lib/user/utils");
 const authenticate = async (req, _res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
   try {
@@ -17,16 +17,7 @@ const authenticate = async (req, _res, next) => {
     if (!user) {
       next(authenticationError("user not found"));
     }
-    if (!user.confirmed) {
-      next(
-        authenticationError(
-          "Your account is not verified. Please verify your account",
-        ),
-      );
-    }
-    if (user.blocked) {
-      next(authenticationError("Your account is blocked"));
-    }
+
     const userDTO = getUserDTO(user);
     req.user = { ...userDTO };
     next();

@@ -2,16 +2,15 @@ const bcrypt = require("bcryptjs");
 const { badRequest, notFound } = require("../utils/error");
 const getUserTokenPayload = require("../utils/getUserDTO");
 const { generateToken } = require("../utils/token");
-const { findUserByEmail } = require("../user/utils");
+const { findLoginUser } = require("../user/utils");
 const getUserDTO = require("../utils/getUserDTO");
 
-const localLogin = async (identifier, password) => {
+const localLogin = async (email, password) => {
   try {
-    const user = await findUserByEmail(identifier);
+    const user = await findLoginUser(email);
     if (!user) {
       throw notFound("User not found.");
     }
-    console.log("user", user);
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {

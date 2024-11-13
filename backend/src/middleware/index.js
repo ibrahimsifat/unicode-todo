@@ -23,6 +23,7 @@ const applyMiddleware = (app) => {
   //   credentials: true,
   //   optionSuccessStatus: 200,
   // };
+
   app.use(cors());
   // openapi specification middleware
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDoc));

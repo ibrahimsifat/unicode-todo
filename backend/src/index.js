@@ -1,14 +1,8 @@
-const http = require("http");
-const app = require("./app/app");
+const server = require("./app/app"); // Import the modified app
 const config = require("./config");
 require("./config/db");
-const server = http.createServer(app);
-const PORT = config.port;
+const PORT = config.port || 5000;
 
-// listen the app
-server.listen(PORT, (err) => {
-  if (err) {
-    console.log(err);
-  }
-  console.info("Server started on PORT %s.", PORT);
+server.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
