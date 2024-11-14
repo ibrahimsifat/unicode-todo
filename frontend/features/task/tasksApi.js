@@ -145,5 +145,5 @@ export const {
   useAddTaskMutation,
   useUpdateTaskMutation,
   useDeleteTaskMutation,
-  useToggleStatusMutation
+  useToggleStatusMutation,
 } = tasksApi;

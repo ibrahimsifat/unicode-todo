@@ -61,7 +61,7 @@ const InsertTodoForm = ({ isFormOpen, setIsFormOpen }) => {
   return (
     <div>
       <form onSubmit={handleAddTask}>
-        <div className="flex items-center bg-gray-100 px-4 py-4 rounded-md my-6">
+        <div className="flex items-center bg-gray-100 px-4 py-4 rounded-lg my-6">
           <MdOutlineEditNote size={35} />
 
           <input
@@ -119,7 +119,7 @@ const InsertTodoForm = ({ isFormOpen, setIsFormOpen }) => {
 
 const SubmitButton = () => {
   return (
-    <button className="flex items-center justify-center w-full py-2 mt-4 text-gray-600 hover:text-gray-700 bg-gray-200 hover:bg-gray-300 rounded-md border-2 border-dashed border-gray-300">
+    <button className="flex items-center justify-center w-full py-2 mt-4 text-gray-100 hover:text-gray-300 bg-[#2F2B43] hover:bg-[#3d365f] rounded-md border-2 border-gray-300">
       <div className="w-11/12 flex items-center justify-center">
         <div className="flex items-center">
           <svg
