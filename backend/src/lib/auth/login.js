@@ -20,7 +20,9 @@ const localLogin = async (email, password) => {
     const payload = getUserTokenPayload(user._doc);
     const token = generateToken({ payload });
     const getUser = getUserDTO(user._doc);
+
     console.log("token", token);
+
     const userData = {
       message: "success",
       accessToken: token,

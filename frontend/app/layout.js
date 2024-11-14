@@ -1,34 +1,46 @@
-// app/layout.js
 "use client";
-import { SessionProvider } from "next-auth/react";
+import { setCredentials } from "@/features/auth/authSlice";
+import { SessionProvider, useSession } from "next-auth/react";
 import { Inter } from "next/font/google";
-import { Provider } from "react-redux";
+import { useEffect } from "react";
+import { Provider, useDispatch } from "react-redux";
 import { store } from "../redux/store";
 import ClientProvider from "./ClientProvider";
 import "./globals.css";
 
 const inter = Inter({
-  subsets: ["latin"], // Or other subsets like 'latin-ext' or 'cyrillic'
-  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"], // Optional, specify the font weights you need
-  display: "swap", // Optional, specify display property
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  display: "swap",
 });
-// const geistSans = localFont({
-//   src: "./fonts/GeistVF.woff",
-//   variable: "--font-geist-sans",
-//   weight: "100 900",
-// });
-// const geistMono = localFont({
-//   src: "./fonts/GeistMonoVF.woff",
-//   variable: "--font-geist-mono",
-//   weight: "100 900",
-// });
+
+// Separate component for session handling
+function SessionHandler() {
+  const { data: session } = useSession();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (session?.accessToken) {
+      dispatch(
+        setCredentials({
+          accessToken: session?.accessToken,
+          user: session.user,
+        })
+      );
+    }
+  }, [session, dispatch]);
+
+  return null; // This component does not render UI, it only runs logic
+}
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={` ${inter.className} antialiased`}>
+        {/* Wrapping the entire application in SessionProvider and Redux Provider */}
         <Provider store={store}>
           <SessionProvider>
+            <SessionHandler /> {/* Handles session side effects */}
             <ClientProvider>{children}</ClientProvider>
           </SessionProvider>
         </Provider>

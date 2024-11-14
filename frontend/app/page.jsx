@@ -1,25 +1,26 @@
-// app/auth/signin/page.js
 "use client";
+import AuthInput from "@/components/AuthInput";
+import Button from "@/components/Button";
 
-import DashboardSkeleton from "@/components/DashboardSkeleton";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const SignIn = () => {
-  const router = useRouter();
+export default function Home() {
   const { data: session, status } = useSession();
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  // Redirect authenticated users to the dashboard if they access the login page
   useEffect(() => {
-    // Redirect to dashboard if the user is already logged in
     if (status === "authenticated") {
       router.push("/dashboard");
     }
   }, [status, router]);
 
+  // handle submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -37,59 +38,52 @@ const SignIn = () => {
     }
   };
 
-  // Show loading or redirecting message if the user is already authenticated
-  if (status === "authenticated") {
-    return <DashboardSkeleton />;
-  }
-
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-bold mb-4">Sign In</h2>
-        {error && <p className="text-red-500 text-sm">{error}</p>}
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="mt-1 p-2 w-full border border-gray-300 rounded"
-            />
-          </div>
-          <div className="mb-4">
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="mt-1 p-2 w-full border border-gray-300 rounded"
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded"
-          >
-            Sign In
-          </button>
+    // <!-- Login Page -->
+    <div className="flex items-center justify-center min-h-screen bg-white px-4">
+      <div className="w-full max-w-md">
+        {/* <!-- Header Text --> */}
+        <span className="error">{error}</span>
+        <h2 className="lg:text-4xl text-2xl font-semibold text-[#2f2b43] mb-2">
+          Log in
+        </h2>
+        <sp className="text-gray-500 mb-5">Log in and start using app</sp>
+
+        {/* <!-- Login Form --> */}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* <!-- Email Input Group --> */}
+
+          <AuthInput
+            label="Email"
+            placeholder="cameron@gmail.com"
+            type="email"
+            id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          {/* <!-- Password Input Group --> */}
+
+          <AuthInput
+            id="password"
+            label="Password"
+            placeholder="****************"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            type="password"
+          />
+          {/* <!-- Submit Button --> */}
+          <Button children={"Log in"} />
         </form>
+
+        {/* <!-- Forgot Password Link --> */}
+        <div className="mt-4  text-md text-gray-500">
+          <a href="#" className="text-[#2f2b43] hover:underline">
+            Forgot your password?
+          </a>
+        </div>
       </div>
     </div>
   );
-};
-
-export default SignIn;
+}

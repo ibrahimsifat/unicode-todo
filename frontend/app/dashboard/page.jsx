@@ -1,8 +1,7 @@
 "use client";
 import DashboardSkeleton from "@/components/DashboardSkeleton";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import { useGetTasksQuery } from "@/features/task/tasksApi";
 import { FcCalendar } from "react-icons/fc";
 import { IoGrid } from "react-icons/io5";
 import {
@@ -12,24 +11,20 @@ import {
 import { RiDeleteBin6Line } from "react-icons/ri";
 
 export default function Dashboard() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
+  const { data: tasks, error, isLoading } = useGetTasksQuery();
+  console.log("tasks", tasks);
+  console.log("error", error);
 
-  useEffect(() => {
-    // If user is not authenticated, redirect to the login page
-    if (status === "unauthenticated") {
-      router.push("/");
-    }
-  }, [status, router]);
-
-  if (status === "loading") {
-    return <DashboardSkeleton />; // Loading state while session is being checked
-  }
+  if (isLoading) return <DashboardSkeleton />;
+  if (error) return <p>Error loading tasks.</p>;
 
   return (
-    <div>
+    <ProtectedRoute>
+      {tasks?.data?.map((task) => (
+        <li key={task.id}>{task.title}</li>
+      ))}
       <TaskList />
-    </div>
+    </ProtectedRoute>
   );
 }
 

@@ -12,7 +12,7 @@ const handler = NextAuth({
       },
       async authorize(credentials) {
         try {
-          // Make a request to your backend to authenticate the user
+          // Make a request to backend to authenticate the user
           const response = await axios.post(
             "http://localhost:5000/api/v1/auth/login/local",
             {
@@ -20,9 +20,16 @@ const handler = NextAuth({
               password: credentials.password,
             }
           );
-
-          if (response.data && response.data.user) {
-            return response.data.user;
+          if (
+            response.data &&
+            response.data.user &&
+            response.data.accessToken
+          ) {
+            // Return the user along with the accessToken
+            return {
+              ...response.data.user,
+              accessToken: response.data.accessToken,
+            };
           }
           return null;
         } catch (error) {
@@ -33,7 +40,7 @@ const handler = NextAuth({
     }),
   ],
   pages: {
-    signIn: "/", //  sign-in page
+    signIn: "/", // sign-in page
   },
   session: {
     strategy: "jwt",
@@ -41,16 +48,20 @@ const handler = NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.id = user._id;
+        token.id = user.id;
         token.email = user.email;
         token.name = user.name;
+        // Store the accessToken in the token if it exists
+        token.accessToken = user.accessToken;
       }
       return token;
     },
     async session({ session, token }) {
+      // Pass token data to session object
       session.id = token.id;
       session.email = token.email;
       session.name = token.name;
+      session.accessToken = token.accessToken; // Make sure to add accessToken here
       return session;
     },
   },

@@ -1,6 +1,14 @@
 import PropTypes from "prop-types";
 
-const AuthInput = ({ id, label, type, placeholder, required }) => {
+const AuthInput = ({
+  id,
+  label,
+  type,
+  placeholder,
+  required,
+  value,
+  onChange,
+}) => {
   return (
     <div className="flex items-center">
       <label
@@ -15,6 +23,8 @@ const AuthInput = ({ id, label, type, placeholder, required }) => {
         placeholder={placeholder}
         className="w-3/4 h-10 px-4 border border-gray-300 rounded-r-lg text-gray-700 focus:outline-none focus:border-[#2f2b43]"
         required={required}
+        value={value}
+        onChange={onChange}
       />
     </div>
   );
