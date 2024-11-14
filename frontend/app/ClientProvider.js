@@ -7,10 +7,10 @@ import { logout, setUser } from "../redux/slices/userSlice";
 const ClientProvider = ({ children }) => {
   const dispatch = useDispatch();
   const { data: session } = useSession();
-  // console.log(session?.user);
+  // console.log("session", session);
   useEffect(() => {
     if (session) {
-      dispatch(setUser(session.user));
+      dispatch(setUser({ ...session.user, id: session.id }));
     } else {
       dispatch(logout());
     }
