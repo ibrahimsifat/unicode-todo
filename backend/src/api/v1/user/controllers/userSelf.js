@@ -43,8 +43,6 @@ const userSelf = async (req, res, next) => {
               ],
             },
           ]);
-        console.log(user);
-
         if (!user) {
           throw notFound("User not found");
         }

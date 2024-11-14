@@ -2,7 +2,7 @@
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { logout, setUser } from "../redux/slices/userSlice";
+import { logout, setUser } from "../features/user/userSlice";
 
 const ClientProvider = ({ children }) => {
   const dispatch = useDispatch();

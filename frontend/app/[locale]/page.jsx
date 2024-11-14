@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Home() {
+  const t = useTranslations("index");
   const { data: session, status } = useSession();
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -44,11 +45,12 @@ export default function Home() {
       <div className="w-full max-w-md">
         {/* <!-- Header Text --> */}
         <span className="error">{error}</span>
+        <h1>{t("title")}</h1>
+        <p>{t("description")}</p>
         <h2 className="lg:text-4xl text-2xl font-semibold text-[#2f2b43] mb-2">
           Log in
         </h2>
         <sp className="text-gray-500 mb-5">Log in and start using app</sp>
-
         {/* <!-- Login Form --> */}
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* <!-- Email Input Group --> */}
@@ -76,7 +78,6 @@ export default function Home() {
           {/* <!-- Submit Button --> */}
           <Button children={"Log in"} />
         </form>
-
         {/* <!-- Forgot Password Link --> */}
         <div className="mt-4  text-md text-gray-500">
           <a href="#" className="text-[#2f2b43] hover:underline">

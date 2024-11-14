@@ -1,4 +1,4 @@
-console.log(process.env.DB_CONNECTION_URL);
+// console.log(process.env.DB_CONNECTION_URL);
 const config = {
   env: process.env.NODE_ENV || "development",
   port: process.env.PORT || 5000,

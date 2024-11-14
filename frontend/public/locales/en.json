@@ -1,0 +1,5 @@
+{
+  "greeting": "Hello, {name}!",
+  "login": "Login",
+  "register": "Register"
+}

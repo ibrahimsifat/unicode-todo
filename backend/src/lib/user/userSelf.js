@@ -1,8 +1,4 @@
-// const { parsePopulatedFields } = require("../../utils/Query/queryParser");
 const { User } = require("../../models");
-// const {
-//   getSinglePopulatedFields,
-// } = require("../../utils/Query/getPopulatedFields");
 const { notFound } = require("../../lib/utils/error");
 const { getUserDTO } = require("../utils");
 
@@ -21,11 +17,6 @@ const userSelf = async ({ id, populate }) => {
     throw notFound("User not Found");
   }
 
-  // Apply population
-  // if (populatedFields.length > 0) {
-  //   user = await getSinglePopulatedFields(user, populatedFields);
-  //   // user = await user.populate(populatedFields.join(" "));
-  // }
   const userDTO = getUserDTO(user);
   return userDTO;
 };

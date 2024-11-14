@@ -1,0 +1,14 @@
+{
+  "index": {
+    "title": "Welcome",
+    "description": "This is my internationalized app"
+  },
+  "about": {
+    "title": "About Us",
+    "description": "Learn more about our company"
+  },
+  "navigation": {
+    "home": "Home",
+    "about": "About"
+  }
+}

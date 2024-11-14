@@ -1,8 +1,8 @@
 "use client";
 import DashboardSkeleton from "@/components/DashboardSkeleton";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { setPage, setPageSize } from "@/features/pagination/paginationSlice";
 import { useGetTasksQuery } from "@/features/task/tasksApi";
-import { setPage, setPageSize } from "@/redux/slices/paginationSlice";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Pagination from "./components/Pagination"; // New Pagination component
@@ -44,8 +44,6 @@ export default function Dashboard() {
 
   if (isLoading) return <DashboardSkeleton />;
   if (error) return <p className="text-red-600">Error loading tasks.</p>;
-
-  console.log("Tasks Data:", tasksData); // Debugging: Log tasks data
 
   return (
     <ProtectedRoute>

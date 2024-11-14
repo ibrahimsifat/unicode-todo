@@ -1,8 +1,4 @@
-// const { parsePopulatedFields } = require("../../utils/Query/queryParser");
 const { User } = require("../../models");
-// const {
-//   getSinglePopulatedFields,
-// } = require("../../utils/Query/getPopulatedFields");
 const { notFound } = require("../utils/error");
 const getUserDTO = require("../utils/getUserDTO");
 
@@ -15,17 +11,10 @@ const getUserDTO = require("../utils/getUserDTO");
  * @returns {Object} - The user data with populated fields if requested.
  */
 const findSingle = async ({ id, populate }) => {
-  // const populatedFields = parsePopulatedFields(populate);
   let user = await User.findById(id);
   if (!user) {
     throw notFound("User Not Found");
   }
-
-  // Apply population
-  // if (populatedFields.length > 0) {
-  //   user = await getSinglePopulatedFields(user, populatedFields);
-  //   // user = await user.populate(populatedFields.join(" "));
-  // }
   const getUser = getUserDTO(user);
   return getUser;
 };

@@ -11,7 +11,6 @@ const baseQuery = fetchBaseQuery({
 
     const token = session?.accessToken;
 
-    console.log("Access Token:", token); // Log the token for debugging
     if (token) {
       headers.set("Authorization", `Bearer ${token}`); // Add token to Authorization header
     }

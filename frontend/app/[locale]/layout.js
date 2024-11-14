@@ -4,8 +4,10 @@ import { SessionProvider, useSession } from "next-auth/react";
 import { Inter } from "next/font/google";
 import { useEffect } from "react";
 import { Provider, useDispatch } from "react-redux";
-import { store } from "../redux/store";
-import ClientProvider from "./ClientProvider";
+
+import { store } from "@/features/store";
+import { useLocale } from "next-intl";
+import ClientProvider from "../ClientProvider";
 import "./globals.css";
 
 const inter = Inter({
@@ -33,9 +35,14 @@ function SessionHandler() {
   return null; // This component does not render UI, it only runs logic
 }
 
-export default function RootLayout({ children }) {
+export default function RootLayout({ children, params }) {
+  const locale = useLocale();
+
+  // Validate that the incoming `locale` parameter is valid
+  if (!locales.includes(params.locale)) notFound();
+
   return (
-    <html lang="en">
+    <html lang={locale}>
       <body className={` ${inter.className} antialiased`}>
         {/* Wrapping the entire application in SessionProvider and Redux Provider */}
         <Provider store={store}>

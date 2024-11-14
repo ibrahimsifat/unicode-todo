@@ -1,0 +1,14 @@
+{
+  "index": {
+    "title": "Bienvenido",
+    "description": "Esta es mi aplicación internacionalizada"
+  },
+  "about": {
+    "title": "Sobre Nosotros",
+    "description": "Aprende más sobre nuestra empresa"
+  },
+  "navigation": {
+    "home": "Inicio",
+    "about": "Sobre Nosotros"
+  }
+}
