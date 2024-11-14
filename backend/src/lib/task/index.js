@@ -39,9 +39,9 @@ const updateTask = async (taskId, updates, userId) => {
   }
 
   // Perform the update
-  await Task.findByIdAndUpdate(taskId, updates, { new: true });
+  const newTask = await Task.findByIdAndUpdate(taskId, updates, { new: true });
 
-  return task;
+  return newTask;
 };
 
 /**
@@ -66,7 +66,10 @@ const deleteTask = async (taskId, userId) => {
  * @returns {Array} List of tasks for the given user.
  */
 const getTasksByUser = async (userId) => {
-  return await Task.find({ user_id: userId });
+  return await Task.find({ user_id: userId }).sort({
+    updatedAt: -1,
+    createdAt: -1,
+  });
 };
 
 /**

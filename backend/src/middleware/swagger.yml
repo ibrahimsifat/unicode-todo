@@ -71,7 +71,7 @@ components:
           enum: [completed, pending]
         priority:
           type: string
-          enum: [High, Medium, Low]
+          enum: [high, medium, low]
         createdAt:
           type: string
           format: date-time
@@ -229,8 +229,8 @@ paths:
       summary: Get all tasks for the authenticated user
       tags:
         - Tasks
-      # security:
-      #   - bearerAuth: []
+      security:
+        - bearerAuth: []
       responses:
         "200":
           description: A list of tasks
@@ -306,6 +306,61 @@ paths:
                 $ref: "#/components/schemas/Task"
         "404":
           description: Task not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "401":
+          description: Unauthorized - Authentication required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    patch:
+      summary: Update a task
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+      tags:
+        - Tasks
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                duedate:
+                  type: string
+                  example: "2024-11-15"
+                status:
+                  type: string
+                priority:
+                  type: string
+                  enum: [high, medium, low]
+
+      responses:
+        "200":
+          description: Task updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Task updated successfully"
+                  data:
+                    $ref: "#/components/schemas/Task"
+        "400":
+          description: Bad Request - Invalid task data
           content:
             application/json:
               schema:
