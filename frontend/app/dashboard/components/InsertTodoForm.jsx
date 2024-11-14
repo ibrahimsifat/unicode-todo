@@ -11,6 +11,8 @@ const priorityOptions = [
 ];
 
 const InsertTodoForm = ({ isFormOpen, setIsFormOpen }) => {
+  const page = useSelector((state) => state.pagination.page);
+  const pageSize = useSelector((state) => state.pagination.pageSize);
   // state for title, priority, and duedate
   const [taskState, setTaskState] = useState({
     title: "",
@@ -19,9 +21,13 @@ const InsertTodoForm = ({ isFormOpen, setIsFormOpen }) => {
   });
 
   const [addTask, { isLoading, error }] = useAddTaskMutation();
-  const { refetch } = useGetTasksQuery();
+  const { refetch } = useGetTasksQuery({
+    page,
+    pageSize,
+  });
   const user = useSelector((state) => state.user);
 
+  // handle input change
   const handleOnChange = (e) => {
     const { name, value } = e.target;
 

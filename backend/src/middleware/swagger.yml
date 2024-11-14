@@ -231,15 +231,33 @@ paths:
         - Tasks
       security:
         - bearerAuth: []
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: pageSize
+          in: query
+          required: false
+          schema:
+            type: integer
       responses:
         "200":
           description: A list of tasks
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Task"
+                type: object
+                properties:
+                  task:
+                    $ref: "#/components/schemas/Task"
+                  totalPages:
+                    type: integer
+                  currentPage:
+                    type: integer
+                  totalCount:
+                    type: integer
         "401":
           description: Unauthorized - Authentication required
           content:
@@ -304,6 +322,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Task"
+
         "404":
           description: Task not found
           content:

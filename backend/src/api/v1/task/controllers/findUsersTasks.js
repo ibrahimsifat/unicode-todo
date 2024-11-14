@@ -7,8 +7,9 @@ const taskService = require("../../../../lib/task");
  * @returns {void}
  */
 const findUsersTasks = async (req, res, next) => {
+  const { page, pageSize  } = req.query;
   try {
-    const tasks = await taskService.getTasksByUser(req.user.id);
+    const tasks = await taskService.getTasksByUser(req.user.id, page, pageSize);
     res.status(200).json(tasks);
   } catch (error) {
     next(error);

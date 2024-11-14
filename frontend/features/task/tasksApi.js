@@ -14,7 +14,7 @@ const socket = io(process.env.NEXT_PUBLIC_API_URL, {
 export const tasksApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getTasks: builder.query({
-      query: () => `/tasks`,
+      query: (page) => `/tasks?page=${page.page}&pageSize=${page.pageSize}`,
       transformResponse(apiResponse, meta) {
         return {
           data: apiResponse,

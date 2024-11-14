@@ -65,11 +65,40 @@ const deleteTask = async (taskId, userId) => {
  * @param {String} userId - The ID of the user whose tasks to fetch.
  * @returns {Array} List of tasks for the given user.
  */
-const getTasksByUser = async (userId) => {
-  return await Task.find({ user_id: userId }).sort({
-    updatedAt: -1,
-    createdAt: -1,
-  });
+
+// Default values for pagination
+const DEFAULT_PAGE = 1;
+const DEFAULT_PAGE_SIZE = 4;
+
+const getTasksByUser = async (
+  userId,
+  page = DEFAULT_PAGE,
+  pageSize = DEFAULT_PAGE_SIZE,
+) => {
+  const parsedPage = Math.max(parseInt(page, 10), 1);
+  const parsedPageSize = Math.max(parseInt(pageSize, 10), 1); // Ensures pageSize is at least 1
+
+  // Get the tasks with pagination
+  const tasks = await Task.find({ user_id: userId })
+    .sort({
+      updatedAt: -1,
+      createdAt: -1,
+    })
+    .skip((parsedPage - 1) * parsedPageSize)
+    .limit(parsedPageSize);
+
+  // Get the total count of tasks for pagination info
+  const totalTasks = await Task.countDocuments({ user_id: userId });
+
+  // Calculate total number of pages
+  const totalPages = Math.ceil(totalTasks / parsedPageSize);
+
+  return {
+    tasks,
+    totalPages,
+    currentPage: parsedPage,
+    totalCount: totalTasks,
+  };
 };
 
 /**
