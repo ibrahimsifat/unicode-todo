@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Home() {
-  const t = useTranslations("index");
   const { data: session, status } = useSession();
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -45,8 +44,6 @@ export default function Home() {
       <div className="w-full max-w-md">
         {/* <!-- Header Text --> */}
         <span className="error">{error}</span>
-        <h1>{t("title")}</h1>
-        <p>{t("description")}</p>
         <h2 className="lg:text-4xl text-2xl font-semibold text-[#2f2b43] mb-2">
           Log in
         </h2>

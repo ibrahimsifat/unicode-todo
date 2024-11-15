@@ -6,8 +6,7 @@ import { useEffect } from "react";
 import { Provider, useDispatch } from "react-redux";
 
 import { store } from "@/features/store";
-import { useLocale } from "next-intl";
-import ClientProvider from "../ClientProvider";
+import ClientProvider from "./ClientProvider";
 import "./globals.css";
 
 const inter = Inter({
@@ -35,14 +34,9 @@ function SessionHandler() {
   return null; // This component does not render UI, it only runs logic
 }
 
-export default function RootLayout({ children, params }) {
-  const locale = useLocale();
-
-  // Validate that the incoming `locale` parameter is valid
-  if (!locales.includes(params.locale)) notFound();
-
+export default function RootLayout({ children }) {
   return (
-    <html lang={locale}>
+    <html lang="en">
       <body className={` ${inter.className} antialiased`}>
         {/* Wrapping the entire application in SessionProvider and Redux Provider */}
         <Provider store={store}>
