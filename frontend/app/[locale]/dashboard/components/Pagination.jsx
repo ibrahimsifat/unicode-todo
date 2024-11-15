@@ -1,6 +1,7 @@
 import { useTranslations } from "next-intl";
 const btnStyle =
   "rounded-md border py-2 px-3 text-center text-md transition-all border-gray-600 text-slate-800 hover:text-white hover:bg-slate-800 hover:border-slate-800 focus:text-white focus:bg-slate-800 focus:border-slate-800 active:border-slate-800 active:text-white active:bg-slate-800 disabled:pointer-events-none disabled:opacity-50 disabled:border-none mx-2 disabled:cursor-not-allowed";
+
 const Pagination = ({
   page,
   totalPages,

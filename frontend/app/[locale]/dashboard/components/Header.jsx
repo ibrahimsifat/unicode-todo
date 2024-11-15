@@ -1,10 +1,11 @@
+import { setPriority } from "@/features/pagination/paginationSlice";
 import dayjs from "dayjs";
 import "dayjs/locale/ar";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { FaFilter } from "react-icons/fa";
 import { IoGrid } from "react-icons/io5";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const priorityData = [
   {
@@ -24,8 +25,10 @@ const priorityData = [
     value: "low",
   },
 ];
-const Header = ({ selectedPriority, setSelectedPriority }) => {
+const Header = () => {
   const t = useTranslations("dashboard");
+  const priorityValue = useSelector((state) => state.pagination.priority);
+  const dispatch = useDispatch();
   const { user } = useSelector((state) => state?.user);
   const { locale } = useRouter(); // Get the current locale from the router
   console.log(locale);
@@ -67,9 +70,9 @@ const Header = ({ selectedPriority, setSelectedPriority }) => {
         {translatedPriorityOptions.map((priority) => (
           <button
             key={priority.value}
-            onClick={() => setSelectedPriority(priority.value)}
+            onClick={() => dispatch(setPriority(priority.value))}
             className={`px-3 rounded-full text-sm ${
-              selectedPriority === priority.value
+              priorityValue === priority.value
                 ? "bg-[#2F2B43] text-white"
                 : "bg-gray-200"
             } transition duration-200 hover:bg-[#110f1d] hover:text-white focus:outline-none`}

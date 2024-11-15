@@ -27,7 +27,8 @@ socket.on("reconnect_failed", () => console.error("Reconnection failed"));
 export const tasksApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getTasks: builder.query({
-      query: (page) => `/tasks?page=${page.page}&pageSize=${page.pageSize}`,
+      query: (page) =>
+        `/tasks?page=${page.page}&pageSize=${page.pageSize}&priority=${page.priority}&todaytask=${page.todaytask}`,
       transformResponse(apiResponse, meta) {
         return {
           data: apiResponse,

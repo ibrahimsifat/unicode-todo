@@ -74,12 +74,33 @@ const getTasksByUser = async (
   userId,
   page = DEFAULT_PAGE,
   pageSize = DEFAULT_PAGE_SIZE,
+  priority,
+  todaytask,
 ) => {
   const parsedPage = Math.max(parseInt(page, 10), 1);
   const parsedPageSize = Math.max(parseInt(pageSize, 10), 1); // Ensures pageSize is at least 1
 
+  // Build the query dynamically based on priority
+  const query = { user_id: userId };
+  if (priority) {
+    query.priority = priority; // Only add priority if it's provided
+  }
+  const { startOfDay, endOfDay } = (() => {
+    const start = new Date();
+    start.setHours(0, 0, 0, 0);
+
+    const end = new Date();
+    end.setHours(23, 59, 59, 999);
+
+    return { startOfDay: start, endOfDay: end };
+  })();
+
+  // if todaytask is true, filter the tasks that are due today
+  if (todaytask) {
+    query.duedate = { $gte: startOfDay, $lte: endOfDay };
+  }
   // Get the tasks with pagination
-  const tasks = await Task.find({ user_id: userId })
+  const tasks = await Task.find(query)
     .sort({
       updatedAt: -1,
       createdAt: -1,
@@ -88,7 +109,8 @@ const getTasksByUser = async (
     .limit(parsedPageSize);
 
   // Get the total count of tasks for pagination info
-  const totalTasks = await Task.countDocuments({ user_id: userId });
+  const totalTasks = await Task.countDocuments(query); // Use the same query for counting
+  console.log("totalTasks", totalTasks);
 
   // Calculate total number of pages
   const totalPages = Math.ceil(totalTasks / parsedPageSize);

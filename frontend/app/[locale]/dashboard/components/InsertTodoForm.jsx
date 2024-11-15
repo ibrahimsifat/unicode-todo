@@ -15,18 +15,22 @@ const InsertTodoForm = ({ isFormOpen, setIsFormOpen }) => {
   const t = useTranslations("dashboard");
   const page = useSelector((state) => state.pagination.page);
   const pageSize = useSelector((state) => state.pagination.pageSize);
+  const priority = useSelector((state) => state.pagination.priority);
+
   // state for title, priority, and duedate
   const [taskState, setTaskState] = useState({
     title: "",
     priority: "medium",
     duedate: "",
   });
-
-  const [addTask, { isLoading, error }] = useAddTaskMutation();
-  const { refetch } = useGetTasksQuery({
+  const query = {
     page,
     pageSize,
-  });
+    priority,
+    todaytask: true,
+  };
+  const [addTask, { isLoading, error }] = useAddTaskMutation();
+  const { refetch } = useGetTasksQuery({ ...query });
   const user = useSelector((state) => state.user);
 
   // handle input change

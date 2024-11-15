@@ -242,6 +242,16 @@ paths:
           required: false
           schema:
             type: integer
+        - name: priority
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: todaytask
+          in: query
+          required: false
+          schema:
+            type: boolean
       responses:
         "200":
           description: A list of tasks

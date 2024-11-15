@@ -5,9 +5,8 @@ import {
   useToggleStatusMutation,
   useUpdateTaskMutation,
 } from "@/features/task/tasksApi";
-import dayjs from "dayjs";
 import { useTranslations } from "next-intl";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { FcCalendar } from "react-icons/fc";
 import { useSelector } from "react-redux";
 import Header from "./Header";
@@ -19,11 +18,18 @@ const TaskList = ({ tasks, isFormOpen, setIsFormOpen }) => {
   const t = useTranslations("dashboard");
   const [editTaskId, setEditTaskId] = useState(null);
   const [editTitle, setEditTitle] = useState("");
-  const [selectedPriority, setSelectedPriority] = useState("all");
   const page = useSelector((state) => state.pagination.page);
   const pageSize = useSelector((state) => state.pagination.pageSize);
+  const priority = useSelector((state) => state.pagination.priority);
 
-  const { refetch, isLoading, isError } = useGetTasksQuery({ page, pageSize });
+  const query = {
+    page,
+    pageSize,
+    priority,
+    todaytask: true,
+  };
+  const { refetch, isLoading, isError } = useGetTasksQuery({ ...query });
+
   const [toggleStatus] = useToggleStatusMutation();
   const [deleteTask] = useDeleteTaskMutation();
   const [updateTask] = useUpdateTaskMutation();
@@ -62,61 +68,16 @@ const TaskList = ({ tasks, isFormOpen, setIsFormOpen }) => {
     }
   };
 
-  const today = dayjs().startOf("day");
-
-  // Memoized filters to avoid unnecessary re-renders
-  const filteredTasks = useMemo(() => {
-    return selectedPriority === "all"
-      ? tasks
-      : tasks.filter((task) => task.priority === selectedPriority);
-  }, [tasks, selectedPriority]);
-
-  const todayTasks = useMemo(
-    () =>
-      tasks?.filter((task) => {
-        const taskDate = task.duedate
-          ? dayjs(task.duedate).startOf("day")
-          : null;
-        return taskDate && taskDate.isSame(today, "day");
-      }),
-    [tasks, today]
-  );
-
-  const upcomingTasks = useMemo(
-    () =>
-      tasks?.filter((task) => {
-        const taskDate = task.duedate
-          ? dayjs(task.duedate).startOf("day")
-          : null;
-        return taskDate && !taskDate.isSame(today, "day");
-      }),
-    [tasks, today]
-  );
-
-  const expiredTasks = useMemo(
-    () =>
-      tasks?.filter((task) => {
-        const taskDate = task.duedate
-          ? dayjs(task.duedate).startOf("day")
-          : null;
-        return taskDate && taskDate.isBefore(today, "day");
-      }),
-    [tasks, today]
-  );
-
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error loading tasks.</div>;
 
   return (
     <div className="w-full max-w-3xl mx-auto p-8 bg-white rounded-xl mt-10">
       {/* Greeting Section */}
-      <Header
-        selectedPriority={selectedPriority}
-        setSelectedPriority={setSelectedPriority}
-      />
+      <Header />
 
       {/* Task List for Today */}
-      {filteredTasks?.length > 0 && (
+      {tasks?.length > 0 && (
         <div className="bg-base-100 collapse collapse-arrow collapse-open">
           <input type="checkbox" className="peer" />
           <div className="collapse-title bg-gray-50 peer-checked:bg-gray-100">
@@ -127,7 +88,7 @@ const TaskList = ({ tasks, isFormOpen, setIsFormOpen }) => {
                   {t("today")}
                 </span>
                 <span className="bg-gray-200 text-gray-800 text-sm font-medium px-2 mx-3 py-1 rounded">
-                  {filteredTasks.length}
+                  {tasks?.length}
                 </span>
               </div>
             </div>
@@ -136,14 +97,13 @@ const TaskList = ({ tasks, isFormOpen, setIsFormOpen }) => {
           <div className="collapse-content bg-gray-100 peer-checked:bg-gray-100">
             <TaskItems
               handleEditToggle={handleEditToggle}
-              tasks={filteredTasks}
+              tasks={tasks}
               editTaskId={editTaskId}
               editTitle={editTitle}
               setEditTitle={setEditTitle}
               handleEditSave={handleEditSave}
               handleDelete={handleDelete}
               handleStatusChange={handleStatusChange}
-              filteredTasks={filteredTasks}
             />
           </div>
         </div>

@@ -7,7 +7,7 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 
 const TaskItems = ({
   handleEditToggle,
-  filteredTasks,
+  tasks,
   editTaskId,
   editTitle,
   setEditTitle,
@@ -18,7 +18,7 @@ const TaskItems = ({
   const t = useTranslations("dashboard");
   return (
     <div className="space-y-4 mt-4">
-      {filteredTasks?.map((task) =>
+      {tasks?.map((task) =>
         editTaskId === task._id ? (
           // Edit Mode View
           <div className="flex items-center space-x-2 w-full py-3 bg-gray-50 rounded-lg ">
