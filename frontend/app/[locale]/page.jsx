@@ -8,9 +8,10 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Home() {
-  const t = useTranslations("index");
+  const t = useTranslations("login");
 
   const { data: session, status } = useSession();
+
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -47,17 +48,17 @@ export default function Home() {
     <div className="flex items-center justify-center min-h-screen bg-white px-4">
       <div className="w-full max-w-md">
         {/* <!-- Header Text --> */}
-        <span className="error">{error}</span>
+        <span className="error text-red-500">{error}</span>
         <h2 className="lg:text-4xl text-2xl font-semibold text-[#2f2b43] mb-2">
-          Log in {t("title")}
+          {t("login")}
         </h2>
-        <span className="text-gray-500 mb-5">Log in and start using app</span>
+        <span className="text-gray-500 mb-5">{t("loginAndStart")}</span>
         {/* <!-- Login Form --> */}
         <form onSubmit={handleSubmit} className="space-y-6 mt-4">
           {/* <!-- Email Input Group --> */}
 
           <AuthInput
-            label="Email"
+            label={t("email")}
             placeholder="cameron@gmail.com"
             type="email"
             id="email"
@@ -69,7 +70,7 @@ export default function Home() {
 
           <AuthInput
             id="password"
-            label="Password"
+            label={t("password")}
             placeholder="****************"
             required
             value={password}
@@ -77,12 +78,17 @@ export default function Home() {
             type="password"
           />
           {/* <!-- Submit Button --> */}
-          <Button children={"Log in"} />
+          <Button
+            children={t("login")}
+            disabled={status === "loading"}
+            // isLoading={status === "loading"}
+          />
+          {status === "loading" && <span>Loading...</span>}
         </form>
         {/* <!-- Forgot Password Link --> */}
         <div className="mt-4  text-md text-gray-500">
           <a href="#" className="text-[#2f2b43] hover:underline">
-            Forgot your password?
+            {t("forgotPassword")}
           </a>
         </div>
       </div>

@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { FaRegEdit } from "react-icons/fa";
 import { FcOk } from "react-icons/fc";
 import { IoCloseCircleSharp } from "react-icons/io5";
@@ -14,6 +15,7 @@ const TaskItems = ({
   handleDelete,
   handleStatusChange,
 }) => {
+  const t = useTranslations("dashboard");
   return (
     <div className="space-y-4 mt-4">
       {filteredTasks?.map((task) =>
@@ -88,7 +90,7 @@ const TaskItems = ({
                   task.priority == "low" && "bg-green-100 text-green-600"
                 } text-sm font-semibold px-2 py-1 rounded cursor-pointer`}
               >
-                {task.priority}
+                {t(`priorityNameList.${task.priority}`)}
               </span>
               <button
                 className="text-gray-400 hover:text-gray-600"

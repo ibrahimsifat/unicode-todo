@@ -13,7 +13,7 @@ const AuthInput = ({
     <div className="flex items-center">
       <label
         htmlFor={id}
-        className="w-1/4 h-10 flex items-center px-3 text-sm font-medium text-gray-700 bg-gray-50 rounded-l-lg border border-r-0 border-gray-300"
+        className="w-1/4 h-10 flex items-center px-3 text-sm font-medium text-gray-700 bg-gray-50 ltr:rounded-l-lg rtl:rounded-r-lg border lrt:border-r-0 rtl:border-l-0 border-gray-300"
       >
         {label}
       </label>
@@ -21,7 +21,7 @@ const AuthInput = ({
         type={type}
         id={id}
         placeholder={placeholder}
-        className="w-3/4 h-10 px-4 border border-gray-300 rounded-r-lg text-gray-700 focus:outline-none focus:border-[#2f2b43]"
+        className="w-3/4 h-10 px-4 border border-gray-300 ltr:rounded-r-lg rtl:rounded-l-lg text-gray-700 focus:outline-none focus:border-[#2f2b43]"
         required={required}
         value={value}
         onChange={onChange}

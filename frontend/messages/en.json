@@ -1,6 +1,10 @@
 {
-  "index": {
-    "title": "Welcome"
+  "login": {
+    "login": "Log In",
+    "email": "Email",
+    "password": "Password",
+    "loginAndStart": "Log in and start using app",
+    "forgotPassword": "Forgot your password?"
   },
   "dashboard": {
     "greeting": "Welcome",

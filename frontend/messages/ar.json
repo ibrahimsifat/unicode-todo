@@ -1,6 +1,10 @@
 {
-  "index": {
-    "title": "مرحبًا"
+  "login": {
+    "login": "تسجيل الدخول",
+    "email": "البريد",
+    "password": "كلمة المرور",
+    "loginAndStart": "تسجيل الدخول وبدء استخدام التطبيق",
+    "forgotPassword": "نسيت كلمة المرور؟"
   },
   "dashboard": {
     "greeting": "مرحبًا",

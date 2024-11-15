@@ -30,8 +30,9 @@ const handler = NextAuth({
               ...response.data.user,
               accessToken: response.data.accessToken,
             };
+          } else {
+            throw new Error("Invalid email or password");
           }
-          return null;
         } catch (error) {
           console.error("Error authenticating:", error);
           return null;

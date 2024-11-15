@@ -1,34 +1,16 @@
-import LocaleSwitcher from "./LanguageSwitcher";
+import LocaleSwitcher from "@/components/LanguageSwitcher";
+import LogoutButton from "./LogoutButton";
 
-const Navbar = () => {
+const Navbar = ({ handleLogout }) => {
   return (
-    <div className="navbar bg-base-200">
-      <div className="flex-1">
-        <a className="btn btn-ghost text-xl">Nuicode Todo</a>
-      </div>
-      <div className="flex-none gap-2">
-        <LocaleSwitcher />
-        <div className="dropdown dropdown-end">
-          <div
-            tabIndex={0}
-            role="button"
-            className="btn btn-ghost btn-circle avatar"
-          >
-            <div className="w-10 rounded-full">
-              <img
-                alt="Tailwind CSS Navbar component"
-                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-              />
-            </div>
-          </div>
-          <ul
-            tabIndex={0}
-            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
-          >
-            <li>
-              <a>Logout</a>
-            </li>
-          </ul>
+    <div className="navbar bg-base-200 sticky top-0 z-50 ">
+      <div className="flex justify-between items-center max-w-screen-lg mx-auto w-full">
+        <div className="flex-1">
+          <a className="btn btn-ghost text-xl">Nuicode Todo</a>
+        </div>
+        <div className="flex lg:gap-4 gap-2">
+          <LocaleSwitcher />
+          {handleLogout && <LogoutButton handleLogout={handleLogout} />}
         </div>
       </div>
     </div>

@@ -1,5 +1,4 @@
 "use client";
-import Navbar from "@/components/Navbar";
 import { setCredentials } from "@/features/auth/authSlice";
 import { store } from "@/features/store";
 import { SessionProvider, useSession } from "next-auth/react";
@@ -55,7 +54,6 @@ export default function LocaleLayout({ children, params }) {
           locale === "ar" ? notoKufiArabic.className : inter.className
         } antialiased`}
       >
-        <Navbar />
         <Provider store={store}>
           <SessionProvider>
             <NextIntlClientProvider locale={locale} messages={messages}>

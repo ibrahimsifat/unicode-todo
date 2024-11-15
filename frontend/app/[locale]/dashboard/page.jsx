@@ -1,8 +1,12 @@
 "use client";
 import DashboardSkeleton from "@/components/DashboardSkeleton";
+import Navbar from "@/components/Navbar";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { setPage, setPageSize } from "@/features/pagination/paginationSlice";
 import { useGetTasksQuery } from "@/features/task/tasksApi";
+import { logout } from "@/features/user/userSlice";
+import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Pagination from "./components/Pagination"; // New Pagination component
@@ -13,7 +17,14 @@ export default function Dashboard() {
   const page = useSelector((state) => state.pagination.page);
   const pageSize = useSelector((state) => state.pagination.pageSize);
   const dispatch = useDispatch();
+  const router = useRouter();
+  const handleLogout = async () => {
+    await signOut({ redirect: false });
+    // Dispatch logout action to reset user state in Redux
+    dispatch(logout());
 
+    router.push("/");
+  };
   const {
     data: tasks,
     error,
@@ -43,11 +54,14 @@ export default function Dashboard() {
   };
 
   if (isLoading) return <DashboardSkeleton />;
-  if (error) return <p className="text-red-600">Error loading tasks.</p>;
+  if (error) return handleLogout();
 
   return (
     <ProtectedRoute>
+      <Navbar handleLogout={tasksData ? handleLogout : null} />
       <div className="flex flex-col space-y-6">
+        {/* <LogoutButton handleLogout={handleLogout} /> */}
+        {/* <button onClick={handleLogout}>Logout</button> */}
         {tasksData && (
           <TaskList
             tasks={tasksData?.tasks}
