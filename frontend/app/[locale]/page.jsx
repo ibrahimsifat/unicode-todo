@@ -3,20 +3,24 @@ import AuthInput from "@/components/AuthInput";
 import Button from "@/components/Button";
 
 import { signIn, useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function Home() {
+  const t = useTranslations("index");
+
   const { data: session, status } = useSession();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  const { locale = "en" } = router;
   // Redirect authenticated users to the dashboard if they access the login page
   useEffect(() => {
     if (status === "authenticated") {
-      router.push("/dashboard");
+      router.push(`/${locale}/dashboard`);
     }
   }, [status, router]);
 
@@ -34,7 +38,7 @@ export default function Home() {
     if (res.error) {
       setError(res.error);
     } else {
-      router.push("/dashboard"); // Redirect to dashboard after successful login
+      router.push(`/${locale}/dashboard`); // Redirect to dashboard after successful login
     }
   };
 
@@ -45,11 +49,11 @@ export default function Home() {
         {/* <!-- Header Text --> */}
         <span className="error">{error}</span>
         <h2 className="lg:text-4xl text-2xl font-semibold text-[#2f2b43] mb-2">
-          Log in
+          Log in {t("title")}
         </h2>
-        <sp className="text-gray-500 mb-5">Log in and start using app</sp>
+        <span className="text-gray-500 mb-5">Log in and start using app</span>
         {/* <!-- Login Form --> */}
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6 mt-4">
           {/* <!-- Email Input Group --> */}
 
           <AuthInput

@@ -1,8 +1,11 @@
 "use client";
+import { useTranslations } from "next-intl";
 import { FcCalendar } from "react-icons/fc";
 import { MdOutlineDragIndicator } from "react-icons/md";
 import { RiDeleteBin6Line } from "react-icons/ri";
+
 const ExpireTask = ({ expiredTasks }) => {
+  const t = useTranslations("dashboard");
   return (
     <div className="bg-base-100 collapse collapse-arrow  ">
       <input type="checkbox" className="peer" />
@@ -11,7 +14,7 @@ const ExpireTask = ({ expiredTasks }) => {
           <div className="flex items-center">
             <FcCalendar size={20} />
             <span className="text-lg font-semibold text-gray-700">
-              Expired Tasks
+              {t("expiredTasks")}
             </span>
             <span className="bg-gray-200 text-gray-800 text-sm font-medium px-2 mx-3 py-1 rounded">
               {expiredTasks?.length}

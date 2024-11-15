@@ -1,14 +1,42 @@
 {
   "index": {
-    "title": "Welcome",
-    "description": "This is my internationalized app"
+    "title": "Welcome"
   },
-  "about": {
-    "title": "About Us",
-    "description": "Learn more about our company"
-  },
-  "navigation": {
-    "home": "Home",
-    "about": "About"
+  "dashboard": {
+    "greeting": "Welcome",
+    "priorityList": {
+      "all": "All",
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High"
+    },
+    "priorityNameList": {
+      "all": "All",
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High"
+    },
+    "newTask": "New Task",
+    "today": "Today",
+    "days": {
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday"
+    },
+    "todayIs": "Today is",
+    "priority": "Priority",
+    "addTask": "New Task",
+    "typeYourTodo": "Type your todo",
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "of": "of",
+      "pageSize": "Page Size:",
+      "page": "Page"
+    }
   }
 }

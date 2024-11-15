@@ -1,14 +1,42 @@
 {
   "index": {
-    "title": "Bienvenido",
-    "description": "Esta es mi aplicación internacionalizada"
+    "title": "مرحبًا"
   },
-  "about": {
-    "title": "Sobre Nosotros",
-    "description": "Aprende más sobre nuestra empresa"
-  },
-  "navigation": {
-    "home": "Inicio",
-    "about": "Sobre Nosotros"
+  "dashboard": {
+    "greeting": "مرحبًا",
+    "priorityList": {
+      "all": "الكل",
+      "low": "منخفض",
+      "medium": "متوسط",
+      "high": "عالي"
+    },
+    "newTask": "مهمة جديدة",
+    "priorityNameList": {
+      "all": "الكل",
+      "low": "منخفض",
+      "medium": "متوسط",
+      "high": "عالي"
+    },
+    "today": "اليوم",
+    "days": {
+      "monday": "الاثنين",
+      "tuesday": "الثلاثاء",
+      "wednesday": "الأربعاء",
+      "thursday": "الخميس",
+      "friday": "الجمعة",
+      "saturday": "السبت",
+      "sunday": "الأحد"
+    },
+    "priority": "أولوية",
+    "typeYourTodo": " اكتب قائمة مهامك",
+    "addTask": "إضافة مهمة ",
+    "todayIs": "اليوم هو",
+    "pagination": {
+      "previous": "السابق",
+      "next": "التالي",
+      "of": "من",
+      "pageSize": "حجم الصفحة:",
+      "page": "صفحة"
+    }
   }
 }

@@ -6,6 +6,7 @@ import {
   useUpdateTaskMutation,
 } from "@/features/task/tasksApi";
 import dayjs from "dayjs";
+import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
 import { FcCalendar } from "react-icons/fc";
 import { useSelector } from "react-redux";
@@ -15,6 +16,7 @@ import TaskItems from "./TaskItems";
 import ToggleFormButton from "./ToggleFormButton";
 
 const TaskList = ({ tasks, isFormOpen, setIsFormOpen }) => {
+  const t = useTranslations("dashboard");
   const [editTaskId, setEditTaskId] = useState(null);
   const [editTitle, setEditTitle] = useState("");
   const [selectedPriority, setSelectedPriority] = useState("all");
@@ -122,7 +124,7 @@ const TaskList = ({ tasks, isFormOpen, setIsFormOpen }) => {
               <div className="flex items-center">
                 <FcCalendar size={20} />
                 <span className="text-lg font-semibold text-gray-700">
-                  Today
+                  {t("today")}
                 </span>
                 <span className="bg-gray-200 text-gray-800 text-sm font-medium px-2 mx-3 py-1 rounded">
                   {filteredTasks.length}

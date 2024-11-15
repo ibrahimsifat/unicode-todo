@@ -1,4 +1,5 @@
 import { useAddTaskMutation, useGetTasksQuery } from "@/features/task/tasksApi";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { IoMdCloseCircle } from "react-icons/io";
 import { MdOutlineEditNote } from "react-icons/md";
@@ -11,6 +12,7 @@ const priorityOptions = [
 ];
 
 const InsertTodoForm = ({ isFormOpen, setIsFormOpen }) => {
+  const t = useTranslations("dashboard");
   const page = useSelector((state) => state.pagination.page);
   const pageSize = useSelector((state) => state.pagination.pageSize);
   // state for title, priority, and duedate
@@ -64,6 +66,13 @@ const InsertTodoForm = ({ isFormOpen, setIsFormOpen }) => {
     }
   };
 
+  // translate the priority options
+
+  // Update the labels with translations
+  const translatedOptions = priorityOptions.map((option) => ({
+    ...option,
+    label: t(`priorityList.${option.value}`), // Translate using the key for the label
+  }));
   return (
     <div>
       <form onSubmit={handleAddTask}>
@@ -73,7 +82,7 @@ const InsertTodoForm = ({ isFormOpen, setIsFormOpen }) => {
           <input
             type="text"
             name="title"
-            placeholder="Type your todo"
+            placeholder={t("typeYourTodo")}
             value={taskState.title}
             className="w-full text-lg px-4 py-1 border-none outline-none bg-gray-100 text-gray-500"
             onChange={handleOnChange}
@@ -89,7 +98,7 @@ const InsertTodoForm = ({ isFormOpen, setIsFormOpen }) => {
             <option disabled selected className="text-gray-800">
               Priority
             </option>
-            {priorityOptions.map((option) => (
+            {translatedOptions.map((option) => (
               <option
                 key={option.id}
                 value={option.value}
@@ -124,6 +133,7 @@ const InsertTodoForm = ({ isFormOpen, setIsFormOpen }) => {
 };
 
 const SubmitButton = () => {
+  const t = useTranslations("dashboard");
   return (
     <button className="flex items-center justify-center w-full py-2 mt-4 text-gray-100 hover:text-gray-300 bg-[#2F2B43] hover:bg-[#3d365f] rounded-md border-2 border-gray-300">
       <div className="w-11/12 flex items-center justify-center">
@@ -141,7 +151,7 @@ const SubmitButton = () => {
             <line x1="12" y1="5" x2="12" y2="19" />
             <line x1="5" y1="12" x2="19" y2="12" />
           </svg>
-          <span className="text-sm font-semibold">New Task</span>
+          <span className="text-sm font-semibold">{t("addTask")}</span>
         </div>
       </div>
     </button>
