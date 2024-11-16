@@ -6,10 +6,10 @@ import socket from "@/features/socket";
 import { useGetTaskQuery, useGetTasksQuery } from "@/features/task/tasksApi";
 import { useGetUsersQuery } from "@/features/user/usersApi";
 import { useEffect } from "react";
-import { IoPersonAddOutline } from "react-icons/io5";
 
-import { IoPersonRemoveOutline } from "react-icons/io5";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import { useSelector } from "react-redux";
+import UserTable from "./UserTable";
 
 const AssignmentModal = ({ isOpen, onClose, taskId, loginUser }) => {
   const page = useSelector((state) => state.pagination.page);
@@ -35,6 +35,10 @@ const AssignmentModal = ({ isOpen, onClose, taskId, loginUser }) => {
     todaytask: true,
   };
   const { refetch: taskRefetch } = useGetTasksQuery({ ...todayQuery });
+  const { refetch: taskRefetchRemaining } = useGetTasksQuery({
+    ...todayQuery,
+    todaytask: false,
+  });
 
   const {
     data: userData,
@@ -74,24 +78,9 @@ const AssignmentModal = ({ isOpen, onClose, taskId, loginUser }) => {
     assignedUserIds?.includes(user._id)
   );
 
-  console.log("assignedUserIds", assignedUserIds);
-  console.log("assignedUser", assignedUsers);
-
   const unassignedUsers = users?.filter(
     (user) => !assignedUserIds?.includes(user._id)
   );
-  console.log("unassignedUser", unassignedUsers);
-  console.log(
-    "unassignedUsers",
-    unassignedUsers,
-    "assignedUsers",
-    assignedUsers,
-    taskData
-  );
-
-  // console.log(assignedUserIds);
-  // console.log("assignedUsers", assignedUsers);
-  // console.log("unassignedUsers", unassignedUsers);
 
   const handleAddUser = async (userId) => {
     const assignment = {
@@ -101,6 +90,7 @@ const AssignmentModal = ({ isOpen, onClose, taskId, loginUser }) => {
     };
     await addAssignment(assignment).unwrap();
     await taskRefetch();
+    await taskRefetchRemaining();
   };
 
   const handleRemoveUser = async (userId) => {
@@ -111,10 +101,11 @@ const AssignmentModal = ({ isOpen, onClose, taskId, loginUser }) => {
     await deleteAssignment(assignment).unwrap();
     await refetch();
     await taskRefetch();
+    await taskRefetchRemaining();
   };
 
   // Loading and error handling
-  if (usersLoading || taskLoading) return <div>Loading...</div>;
+  if (usersLoading || taskLoading) return <LoadingSpinner />;
   if (usersError || taskError) return <div>Error...</div>;
 
   return (
@@ -140,60 +131,3 @@ const AssignmentModal = ({ isOpen, onClose, taskId, loginUser }) => {
 };
 
 export default AssignmentModal;
-
-// UserTable Component
-const UserTable = ({
-  assignedUsers,
-  unassignedUsers,
-  handleAddUser,
-  handleRemoveUser,
-}) => {
-  return (
-    <div className="overflow-x-auto">
-      <table className="table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {/* Assigned Users */}
-          {assignedUsers?.map((user) => (
-            <tr key={user._id}>
-              <td>{user.name}</td>
-              <td>{user.email}</td>
-              <td>
-                <button
-                  className="btn bg-red-500 space-x-2 px-3 py-2 text-white hover:bg-red-700"
-                  onClick={() => handleRemoveUser(user._id)}
-                >
-                  <IoPersonRemoveOutline />
-                  <span>Remove</span>
-                </button>
-              </td>
-            </tr>
-          ))}
-
-          {/* Unassigned Users */}
-          {unassignedUsers?.map((user) => (
-            <tr key={user._id}>
-              <td>{user.name}</td>
-              <td>{user.email}</td>
-              <td>
-                <button
-                  className="btn bg-green-500 space-x-2 px-3 py-2 text-white hover:bg-green-700"
-                  onClick={() => handleAddUser(user._id)}
-                >
-                  <IoPersonAddOutline />
-                  <span>Add</span>
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-};

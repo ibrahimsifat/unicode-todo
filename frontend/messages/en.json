@@ -4,11 +4,15 @@
     "email": "Email",
     "password": "Password",
     "loginAndStart": "Log in and start using app",
-    "forgotPassword": "Forgot your password?"
+    "forgotPassword": "Forgot your password?",
+    "demoUsers": "Demo Users",
+    "copyCredentials": "Copy Credentials"
   },
   "dashboard": {
     "greeting": "Welcome",
     "remaining": "Remaining Tasks",
+    "overdue": "Overdue",
+    "next": "Next",
     "priorityList": {
       "all": "All",
       "low": "Low",

@@ -2,6 +2,7 @@
 
 import AuthInput from "@/components/AuthInput";
 import Button from "@/components/Button";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import Navbar from "@/components/Navbar";
 import { useTranslations } from "next-intl";
 import UsePage from "./UsePage";
@@ -19,6 +20,12 @@ export default function Home() {
     handleSubmit,
     status,
   } = UsePage();
+
+  // Function to copy credentials to input fields
+  const handleCopyCredentials = (demoEmail, demoPassword) => {
+    setEmail(demoEmail);
+    setPassword(demoPassword);
+  };
 
   return (
     <>
@@ -49,7 +56,7 @@ export default function Home() {
             <AuthInput
               id="password"
               label={t("password")}
-              placeholder="****************"
+              placeholder="***********"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -58,7 +65,7 @@ export default function Home() {
 
             {/* Submit Button */}
             <Button children={t("login")} disabled={status === "loading"} />
-            {status === "loading" && <span>Loading...</span>}
+            {status === "loading" && <LoadingSpinner />}
           </form>
 
           {/* Forgot Password Link */}
@@ -67,8 +74,46 @@ export default function Home() {
               {t("forgotPassword")}
             </a>
           </div>
+
+          {/* Demo Users */}
+          <LoginDemoUsers
+            demoUsers={demoUsers}
+            handleCopyCredentials={handleCopyCredentials}
+          />
         </div>
       </div>
     </>
   );
 }
+
+// Demo login credentials
+const demoUsers = [
+  { email: "demo1@gmail.com", password: "password123" },
+  { email: "demo2@gmail.com", password: "password456" },
+  { email: "demo3@gmail.com", password: "password789" },
+  { email: "demo4@gmail.com", password: "password000" },
+];
+const LoginDemoUsers = ({ handleCopyCredentials }) => {
+  const t = useTranslations("login");
+  return (
+    <div className="space-y-2 mb-4 mt-6">
+      <h3 className="text-lg font-semibold">{t("demoUsers")}</h3>
+      {demoUsers.map((user, index) => (
+        <div
+          key={index}
+          className="flex justify-between items-center border p-2 rounded bg-gray-100"
+        >
+          <span className="text-sm text-gray-600">
+            {user.email} / {user.password}
+          </span>
+          <button
+            onClick={() => handleCopyCredentials(user.email, user.password)}
+            className="text-xs text-blue-500 underline hover:text-blue-700"
+          >
+            {t("copyCredentials")}
+          </button>
+        </div>
+      ))}
+    </div>
+  );
+};

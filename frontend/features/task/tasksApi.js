@@ -25,7 +25,7 @@ export const tasksApi = apiSlice.injectEndpoints({
           const handleTaskCreated = (newTask) => {
             if (newTask?.receiver?.email === receiverEmail) {
               updateCachedData((draft) => {
-                draft?.data?.unshift(newTask);
+                draft?.data?.tasks?.unshift(newTask);
               });
             }
           };

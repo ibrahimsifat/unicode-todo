@@ -31,6 +31,10 @@ const InsertTodoForm = ({ isFormOpen, setIsFormOpen }) => {
   };
   const [addTask, { isLoading, error }] = useAddTaskMutation();
   const { refetch } = useGetTasksQuery({ ...query });
+  const { refetch: refetchRemaining } = useGetTasksQuery({
+    ...query,
+    todaytask: false,
+  });
   const user = useSelector((state) => state.user);
 
   // handle input change
@@ -63,7 +67,7 @@ const InsertTodoForm = ({ isFormOpen, setIsFormOpen }) => {
 
       await addTask(newTask).unwrap();
       await refetch();
-
+      await refetchRemaining();
       setTaskState({ title: "", priority: "low", duedate: "" }); // Clear the input fields
     } catch (err) {
       console.error("Error adding task:", err);
@@ -100,7 +104,7 @@ const InsertTodoForm = ({ isFormOpen, setIsFormOpen }) => {
             onChange={handleOnChange}
           >
             <option disabled selected className="text-gray-800">
-              Priority
+              {t("priority")}
             </option>
             {translatedOptions.map((option) => (
               <option

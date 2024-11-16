@@ -1,7 +1,10 @@
 const DashboardSkeleton = () => {
   return (
     <div>
-      <div className="min-h-screen py-8 px-4 lg:max-w-3xl lg:mx-auto lg:mt-30">
+      <div className="navbar bg-base-200 sticky top-0 z-50 ">
+        <div className="flex justify-between items-center max-w-screen-lg mx-auto w-full"></div>
+      </div>
+      <div className="min-h-screen py-8 px-4 lg:max-w-3xl lg:mx-auto lg:mt-14 lg:mb-10 ">
         <div className="bg-white p-4 rounded-lg">
           <div className="flex justify-between items-center mb-4">
             <div className="animate-pulse bg-gray-300 h-8 w-32 rounded"></div>

@@ -6,7 +6,7 @@ const Navbar = ({ handleLogout }) => {
     <div className="navbar bg-base-200 sticky top-0 z-50 ">
       <div className="flex justify-between items-center max-w-screen-lg mx-auto w-full">
         <div className="flex-1">
-          <a className="btn btn-ghost text-xl">Nuicode Todo</a>
+          <span className="text-xl font-bold">UNICODE TODO</span>
         </div>
         <div className="flex lg:gap-4 gap-2">
           <LocaleSwitcher />

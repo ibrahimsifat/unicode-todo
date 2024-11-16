@@ -11,6 +11,7 @@ import { useSelector } from "react-redux";
 import AssignmentModal from "./assignment/AssignmentModal";
 dayjs.extend(relativeTime);
 const TaskItems = ({
+  isTodayTask,
   handleEditToggle,
   tasks,
   editTaskId,
@@ -120,13 +121,24 @@ const TaskItems = ({
               </span>
 
               {/*  task da*/}
-              <span className="bg-red-100 text-red-600 text-sm font-semibold px-2 py-1 rounded cursor-pointer">
-                {/* {t(`today`)} */}
-                {/* {dayjs(task.dueDate).toNow()} */}
-                {dayjs().diff(task.dueDate, "hour") < 24
-                  ? t(`today`)
-                  : "overdue"}
-              </span>
+              {isTodayTask ? (
+                <span className="bg-red-100 text-red-600 text-sm font-semibold px-2 py-1 rounded cursor-pointer">
+                  {dayjs().diff(task.duedate, "day") < 1
+                    ? t(`today`)
+                    : "overdue"}
+                </span>
+              ) : (
+                task.duedate &&
+                (dayjs(task.duedate).isBefore(dayjs()) ? (
+                  <span className="bg-red-500 text-white text-sm font-semibold px-2 py-1 rounded cursor-pointer">
+                    {`${t("overdue")} ${dayjs(task.duedate).fromNow()}`}
+                  </span>
+                ) : (
+                  <span className="bg-gray-300 text-gray-600 text-sm font-semibold px-2 py-1 rounded cursor-pointer">
+                    {`${t("next")} ${dayjs(task.duedate).format("DD MMM")}`}
+                  </span>
+                ))
+              )}
 
               <button
                 className="text-gray-400 hover:text-gray-600"

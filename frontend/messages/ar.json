@@ -4,11 +4,15 @@
     "email": "البريد",
     "password": "كلمة المرور",
     "loginAndStart": "تسجيل الدخول وبدء استخدام التطبيق",
-    "forgotPassword": "نسيت كلمة المرور؟"
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "demoUsers": "مستخدمي التجريبية",
+    "copyCredentials": "نسخ البيانات"
   },
   "dashboard": {
     "greeting": "مرحبًا",
     "remaining": "المهام المتبقية",
+    "overdue": "متأخر",
+    "next": "التالي",
     "priorityList": {
       "all": "الكل",
       "low": "منخفض",

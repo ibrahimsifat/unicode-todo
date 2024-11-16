@@ -1,4 +1,5 @@
 "use client";
+import DashboardSkeleton from "@/components/DashboardSkeleton";
 import {
   setPage,
   setPageSize,
@@ -129,7 +130,8 @@ const TaskList = ({ isFormOpen, setIsFormOpen }) => {
     dispatch(setRemainingTaskPage(1));
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) <DashboardSkeleton />;
+
   if (isError) return <div className="text-red-500">Error loading tasks.</div>;
 
   return (
@@ -230,7 +232,6 @@ const TodayTask = ({
   handlePageChange,
   handlePageSizeChange,
 }) => {
-
   const t = useTranslations("dashboard");
   return (
     <div className="bg-base-100 collapse collapse-arrow collapse-open">
@@ -251,6 +252,7 @@ const TodayTask = ({
 
       <div className="collapse-content bg-gray-100 peer-checked:bg-gray-100">
         <TaskItems
+          isTodayTask={true}
           handleEditToggle={handleEditToggle}
           tasks={tasks}
           editTaskId={editTaskId}
