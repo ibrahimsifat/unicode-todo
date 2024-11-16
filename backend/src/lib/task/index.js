@@ -1,4 +1,4 @@
-const { Task } = require("../../models");
+const { Task, Assignment } = require("../../models");
 const { badRequest, notFound } = require("../utils/error");
 
 /**
@@ -22,7 +22,7 @@ const updateTask = async (taskId, updates, userId) => {
   const task = await getTaskById(taskId);
   if (!task) throw notFound("The task is not found");
 
-  if (task?.user_id?.toString() !== userId?.toString()) {
+  if (task?.task?.user_id?.toString() !== userId?.toString()) {
     throw badRequest("You are not authorized to edit this task");
   }
 
@@ -85,6 +85,7 @@ const getTasksByUser = async (
   if (priority) {
     query.priority = priority; // Only add priority if it's provided
   }
+
   const { startOfDay, endOfDay } = (() => {
     const start = new Date();
     start.setHours(0, 0, 0, 0);
@@ -95,34 +96,48 @@ const getTasksByUser = async (
     return { startOfDay: start, endOfDay: end };
   })();
 
-  // if todaytask is true, filter the tasks that are due today
+  // Filter tasks based on whether they are due today
   if (todaytask) {
     query.duedate = { $gte: startOfDay, $lte: endOfDay };
   } else {
-    // if todaytask is false, rest of task which is not due today
     query.$or = [
       { duedate: { $lt: startOfDay } }, // Tasks before today
       { duedate: { $gt: endOfDay } }, // Tasks after today
     ];
   }
-  // Get the tasks with pagination
+
+  // Find tasks and populate assignments with user details
   const tasks = await Task.find(query)
-    .sort({
-      updatedAt: -1,
-      createdAt: -1,
-    })
+    .sort({ updatedAt: -1, createdAt: -1 })
     .skip((parsedPage - 1) * parsedPageSize)
-    .limit(parsedPageSize);
+    .limit(parsedPageSize)
+    .lean(); // Use lean for better performance when not modifying data
+
+  // Fetch assignments related to the tasks
+  const taskIds = tasks.map((task) => task._id);
+  const assignments = await Assignment.find({
+    task_id: { $in: taskIds },
+  }).populate("user_id", "name email avatar");
+
+  // Merge assignments into tasks
+  const tasksWithAssignments = tasks.map((task) => {
+    const taskAssignments = assignments.filter(
+      (assignment) => String(assignment.task_id) === String(task._id),
+    );
+    return {
+      ...task,
+      assignments: taskAssignments,
+    };
+  });
 
   // Get the total count of tasks for pagination info
   const totalTasks = await Task.countDocuments(query); // Use the same query for counting
-  console.log("totalTasks", totalTasks);
 
   // Calculate total number of pages
   const totalPages = Math.ceil(totalTasks / parsedPageSize);
 
   return {
-    tasks,
+    tasks: tasksWithAssignments,
     totalPages,
     currentPage: parsedPage,
     totalCount: totalTasks,
@@ -135,7 +150,22 @@ const getTasksByUser = async (
  * @returns {Object} The task object.
  */
 const getTaskById = async (taskId) => {
-  return await Task.findById(taskId);
+  try {
+    // Find the task by ID
+    const task = await Task.findById(taskId);
+
+    if (!task) {
+      throw notFound("Task not found");
+    }
+
+    // Find all assignments associated with this task
+    const assignments = await Assignment.find({ task_id: taskId });
+
+    return { task, assignments };
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
 
 module.exports = {

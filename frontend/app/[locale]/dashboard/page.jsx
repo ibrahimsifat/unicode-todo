@@ -7,20 +7,9 @@ import TaskList from "./components/TaskList";
 import UsePage from "./UsePage";
 
 export default function Dashboard() {
-  const {
-    isFormOpen,
-    setIsFormOpen,
-    tasksData,
-    handleLogout,
-    handlePageChange,
-    handlePageSizeChange,
-    page,
-    pageSize,
-    isLoading,
-  } = UsePage();
-  console.log("tasksData,", tasksData);
+  const { isFormOpen, setIsFormOpen, tasksData, handleLogout, isLoading } =
+    UsePage();
   if (isLoading) return <DashboardSkeleton />;
-
   return (
     <ProtectedRoute>
       <Navbar handleLogout={tasksData ? handleLogout : null} />

@@ -13,6 +13,7 @@ const edit = async (req, res, next) => {
     const taskId = req.params.id;
     const updates = req.body;
     const userId = req.user.id;
+    console.log(updates, "userId", userId);
     const updatedTask = await taskService.updateTask(taskId, updates, userId);
     req.io.emit("taskUpdated", updatedTask); // Emit task update event
     res

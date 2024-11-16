@@ -8,12 +8,13 @@ const userServices = require("../../../../lib/user");
  * @returns {void}
  */
 const create = async (req, res, next) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, avatar } = req.body;
   try {
     const user = await userServices.create({
       name,
       email,
       password,
+      avatar,
     });
     const { id: userId } = user;
     const response = {

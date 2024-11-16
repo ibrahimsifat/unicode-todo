@@ -10,7 +10,8 @@ const assignmentService = require("../../../../lib/assignment");
 
 const create = async (req, res, next) => {
   try {
-    const assignmentData = { ...req.body, user_id: req.user.id };
+    const assignmentData = { ...req.body };
+    console.log(assignmentData);
     const assignment = await assignmentService.createAssignment(
       assignmentData,
       req.io,

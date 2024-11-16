@@ -65,7 +65,7 @@ const Header = () => {
     label: t(`priorityNameList.${option.value}`), // Translate using the key for the label
   }));
 
-  console.log(translatedPriorityOptions);
+  // console.log(translatedPriorityOptions);
   return (
     <div className="md:flex md:items-center md:justify-between mb-6 md:space-y-0 space-y-4">
       <div>

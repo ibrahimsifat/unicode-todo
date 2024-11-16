@@ -74,10 +74,10 @@ const setupSocket = (server) => {
       }
     });
 
-    socket.on("assignmentDeleted", async (assignmentId) => {
+    socket.on("assignmentDeleted", async (task_id, user_id) => {
       try {
-        await assignmentService.deleteAssignment(assignmentId, io);
-        io.emit("assignmentDeleted", assignmentId);
+        await assignmentService.deleteAssignment(task_id, user_id, io);
+        io.emit("assignmentDeleted", { task_id, user_id });
       } catch (error) {
         console.error("Error in assignmentDeleted event:", error);
       }

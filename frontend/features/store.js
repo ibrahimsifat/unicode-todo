@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { apiSlice } from "./api/apiSlice";
+import assignmentsSliceReducer from "./assignment/assignmentsSlice";
 import authReducer from "./auth/authSlice";
 import paginationReducer from "./pagination/paginationSlice";
 import tasksSliceReducer from "./task/tasksSlice";
@@ -11,6 +12,7 @@ export const store = configureStore({
     user: userReducer,
     auth: authReducer,
     pagination: paginationReducer,
+    assignments: assignmentsSliceReducer,
   },
   devTools: process.env.NODE_ENV !== "production",
   middleware: (getDefaultMiddlewares) =>

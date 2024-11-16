@@ -13,7 +13,6 @@ const UserSchema = new mongoose.Schema(
     },
     avatar: {
       type: String,
-      select: false,
     },
     password: {
       type: String,

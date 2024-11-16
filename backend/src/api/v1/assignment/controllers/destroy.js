@@ -9,10 +9,10 @@ const assignmentService = require("../../../../lib/assignment");
  */
 
 const destroy = async (req, res, next) => {
-  const { id: assignmentId } = req.params;
+  const { task_id, user_id } = req.query;
 
   try {
-    await assignmentService.deleteAssignment(assignmentId, req.io);
+    await assignmentService.deleteAssignment(task_id, user_id, req.io);
     res.status(204).send();
   } catch (error) {
     next(error);

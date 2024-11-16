@@ -1,11 +1,14 @@
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
 import { FaRegEdit } from "react-icons/fa";
 import { FcOk } from "react-icons/fc";
-import { IoCloseCircleSharp } from "react-icons/io5";
+import { IoCloseCircleSharp, IoPersonAdd } from "react-icons/io5";
 import { MdOutlineDragIndicator } from "react-icons/md";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { useSelector } from "react-redux";
+import AssignmentModal from "./assignment/AssignmentModal";
 dayjs.extend(relativeTime);
 const TaskItems = ({
   handleEditToggle,
@@ -18,6 +21,11 @@ const TaskItems = ({
   handleStatusChange,
 }) => {
   const t = useTranslations("dashboard");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const user = useSelector((state) => state?.user?.user);
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
   return (
     <div className="space-y-4 mt-4">
       {tasks?.map((task) =>
@@ -63,25 +71,42 @@ const TaskItems = ({
                 {task.title}
               </span>
             </div>
-            <div className="flex items-center space-x-2 ">
+            <div className="flex items-center lg:space-x-3 space-x-2 ">
               {/* Edit Icon (Visible on Hover) */}
               <FaRegEdit
                 size={20}
-                className=" opacity-0 group-hover:opacity-100 text-gray-800 hover:text-gray-600 cursor-pointer"
+                className=" opacity-0 group-hover:opacity-100 text-gray-900 hover:text-gray-700 cursor-pointer"
                 onClick={() => handleEditToggle(task)}
               />
-              <div className="flex -space-x-2">
+              <IoPersonAdd
+                size={20}
+                className=" opacity-0 group-hover:opacity-100 text-gray-900 hover:text-gray-700 cursor-pointer"
+                onClick={() => {
+                  openModal();
+                }}
+              />
+              <AssignmentModal
+                loginUser={user}
+                isOpen={isModalOpen}
+                onClose={closeModal}
+                taskId={task?._id}
+              />
+              <button
+                className="flex -space-x-2"
+                // onClick={() => {
+                //   openModal();
+                // }}
+              >
                 <div className="avatar-group -space-x-4 rtl:space-x-reverse">
-                  <div className="avatar">
-                    <div className="w-8">
-                      <img
-                        src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                        alt="avatar"
-                      />
+                  {task?.assignments?.map((assignment) => (
+                    <div className="avatar">
+                      <div className="w-8">
+                        <img src={assignment?.user_id?.avatar} alt="avatar" />
+                      </div>
                     </div>
-                  </div>
+                  ))}
                 </div>
-              </div>
+              </button>
               <span
                 className={`${
                   task.priority == "high" && "bg-red-100 text-red-600"

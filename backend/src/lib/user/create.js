@@ -12,7 +12,7 @@ const { userExist } = require("./utils");
  * @returns {Object} - The newly created user with additional properties (id).
  */
 
-const create = async ({ name, email, password }) => {
+const create = async ({ name, email, password, avatar }) => {
   const checkIsExist = await userExist(email);
   if (checkIsExist) {
     throw badRequest("User already exist");
@@ -21,6 +21,7 @@ const create = async ({ name, email, password }) => {
     name,
     email,
     password,
+    avatar,
   };
   const newUser = await User.create({ ...userData });
   const result = getUserDTO(newUser);

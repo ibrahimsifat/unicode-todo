@@ -1,28 +1,5 @@
-import { io } from "socket.io-client";
 import { apiSlice } from "../api/apiSlice";
-
-const socket = io(process.env.NEXT_PUBLIC_SOCKET_SERVER_URL, {
-  reconnectionDelay: 1000,
-  reconnection: true,
-  reconnectionAttempts: 10,
-  transports: ["websocket"],
-  agent: false,
-  upgrade: false,
-  rejectUnauthorized: false,
-});
-
-// Log socket events once
-socket.on("connect", () => console.log("Socket connected with ID:", socket.id));
-socket.on("disconnect", (reason) =>
-  console.log("Socket disconnected:", reason)
-);
-socket.on("reconnect_attempt", (attempt) =>
-  console.log("Reconnection attempt:", attempt)
-);
-socket.on("reconnect_error", (error) =>
-  console.error("Reconnection error:", error)
-);
-socket.on("reconnect_failed", () => console.error("Reconnection failed"));
+import socket from "../socket";
 
 export const tasksApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -90,7 +67,9 @@ export const tasksApi = apiSlice.injectEndpoints({
         }
       },
     }),
-
+    getTask: builder.query({
+      query: (taskId) => `/tasks/${taskId}`,
+    }),
     addTask: builder.mutation({
       query: (data) => ({
         url: "/tasks",
@@ -164,6 +143,7 @@ export const tasksApi = apiSlice.injectEndpoints({
 
 export const {
   useGetTasksQuery,
+  useGetTaskQuery,
   useAddTaskMutation,
   useUpdateTaskMutation,
   useDeleteTaskMutation,

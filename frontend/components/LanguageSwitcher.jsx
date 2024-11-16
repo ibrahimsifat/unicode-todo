@@ -26,7 +26,7 @@ export default function LocaleSwitcher({ locale }) {
 
     router.replace(pathname, { locale: newLocale });
   };
-  console.log(locale);
+  // console.log(locale);
   return (
     <div>
       <select

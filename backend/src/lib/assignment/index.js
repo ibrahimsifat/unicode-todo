@@ -8,6 +8,9 @@ const { serverError, badRequest, notFound } = require("../utils/error");
  * @returns {Promise<Object>} The created assignment or an error if duplicate.
  */
 async function createAssignment(data, io) {
+  if (!data.task_id || !data.user_id) {
+    throw badRequest("Both task_id and user_id are required.");
+  }
   // Check for existing assignment with the same task_id and user_id
   const existingAssignment = await Assignment.findOne({
     task_id: data.task_id,
@@ -58,15 +61,15 @@ const findSingle = async (assignmentId) => {
   return assignment;
 };
 
-async function deleteAssignment(id, io) {
-  const assignment = await Assignment.findById(id);
+async function deleteAssignment(task_id, user_id, io) {
+  const assignment = await Assignment.findOne({ task_id, user_id });
   if (!assignment) {
     throw notFound("Assignment not found");
   }
-  await Assignment.findByIdAndDelete(id);
+  await Assignment.findOneAndDelete({ task_id, user_id });
 
   // Emit a socket event on delete
-  io.emit("assignmentDeleted", { id });
+  io.emit("assignmentDeleted", { task_id, user_id });
   return assignment;
 }
 
