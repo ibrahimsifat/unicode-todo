@@ -48,10 +48,20 @@ const Pagination = ({
         >
           {t("pagination.next")}
         </button>
+        <select
+          value={pageSize}
+          onChange={(e) => onPageSizeChange(Number(e.target.value))}
+          className="select text-md font-medium focus:outline-none border-gray-300"
+          aria-label="Select page size"
+        >
+          <option value={2}>2</option>
+          <option value={3}>3</option>
+          <option value={4}>4</option>
+        </select>
       </div>
 
       {/* Page Size Selection */}
-      <div className="flex items-center space-x-3 mt-4">
+      {/* <div className="flex items-center space-x-3 mt-4">
         <label className="text-gray-800 text-md font-semibold mx-2">
           {t("pagination.pageSize")}
         </label>
@@ -65,7 +75,7 @@ const Pagination = ({
           <option value={3}>3</option>
           <option value={4}>4</option>
         </select>
-      </div>
+      </div> */}
     </div>
   );
 };

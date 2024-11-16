@@ -7,6 +7,8 @@ const paginationSlice = createSlice({
     pageSize: 3,
     priority: "all",
     todaytask: false,
+    remainingTaskPage: 1,
+    remainingTaskPageSize: 3,
   },
   reducers: {
     setPage(state, action) {
@@ -14,6 +16,12 @@ const paginationSlice = createSlice({
     },
     setPageSize(state, action) {
       state.pageSize = action.payload;
+    },
+    setRemainingTaskPage(state, action) {
+      state.remainingTaskPage = action.payload;
+    },
+    setRemainingTaskPageSize(state, action) {
+      state.remainingTaskPageSize = action.payload;
     },
     setPriority(state, action) {
       state.priority = action.payload;
@@ -23,13 +31,22 @@ const paginationSlice = createSlice({
     },
     resetPagination(state) {
       state.page = 1;
-      state.pageSize = 10;
+      state.pageSize = 3;
       state.priority = "all";
       state.todaytask = false;
+      state.remainingTaskPage = 1;
+      state.remainingTaskPageSize = 3;
     },
   },
 });
 
-export const { setPage, setPageSize, resetPagination, setPriority, todayTask } =
-  paginationSlice.actions;
+export const {
+  setPage,
+  setPageSize,
+  resetPagination,
+  setPriority,
+  todayTask,
+  setRemainingTaskPage,
+  setRemainingTaskPageSize,
+} = paginationSlice.actions;
 export default paginationSlice.reducer;

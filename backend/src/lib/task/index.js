@@ -98,6 +98,12 @@ const getTasksByUser = async (
   // if todaytask is true, filter the tasks that are due today
   if (todaytask) {
     query.duedate = { $gte: startOfDay, $lte: endOfDay };
+  } else {
+    // if todaytask is false, rest of task which is not due today
+    query.$or = [
+      { duedate: { $lt: startOfDay } }, // Tasks before today
+      { duedate: { $gt: endOfDay } }, // Tasks after today
+    ];
   }
   // Get the tasks with pagination
   const tasks = await Task.find(query)

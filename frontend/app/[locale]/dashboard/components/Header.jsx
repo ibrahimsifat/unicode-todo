@@ -1,8 +1,8 @@
 import { setPriority } from "@/features/pagination/paginationSlice";
+import { useGetTasksQuery } from "@/features/task/tasksApi";
 import dayjs from "dayjs";
 import "dayjs/locale/ar";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
 import { FaFilter } from "react-icons/fa";
 import { IoGrid } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,9 +30,25 @@ const Header = () => {
   const priorityValue = useSelector((state) => state.pagination.priority);
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state?.user);
-  const { locale } = useRouter(); // Get the current locale from the router
-  console.log(locale);
-  dayjs.locale(locale); // Change locale dynamically based on current language
+  const page = useSelector((state) => state.pagination.page);
+  const pageSize = useSelector((state) => state.pagination.pageSize);
+  const priority = useSelector((state) => state.pagination.priority);
+
+  const todayQuery = {
+    page,
+    pageSize,
+    priority,
+    todaytask: true,
+  };
+  const { refetch, isLoading, isError } = useGetTasksQuery({ ...todayQuery });
+
+  // handle priority change
+  const handlePriorityChange = (value) => {
+    dispatch(setPriority(value));
+    refetch();
+  };
+
+  // const { locale } = useRouter(); // Get the current locale from the router
 
   // Get the current day name
   const currentDay = dayjs().format("dddd").toLowerCase();
@@ -48,11 +64,12 @@ const Header = () => {
     ...option,
     label: t(`priorityNameList.${option.value}`), // Translate using the key for the label
   }));
+
   console.log(translatedPriorityOptions);
   return (
-    <div className="flex items-center justify-between mb-6">
+    <div className="md:flex md:items-center md:justify-between mb-6 md:space-y-0 space-y-4">
       <div>
-        <h1 className="text-2xl font-semibold text-gray-800">
+        <h1 className="lg:text-2xl md:text-xl text-lg font-semibold text-gray-800">
           {t("greeting")}, {user?.name || "Camero"}
           <span role="img" aria-label="smiling face">
             🤩
@@ -70,7 +87,7 @@ const Header = () => {
         {translatedPriorityOptions.map((priority) => (
           <button
             key={priority.value}
-            onClick={() => dispatch(setPriority(priority.value))}
+            onClick={() => handlePriorityChange(priority.value)}
             className={`px-3 rounded-full text-sm ${
               priorityValue === priority.value
                 ? "bg-[#2F2B43] text-white"
@@ -80,11 +97,10 @@ const Header = () => {
             {priority.label}
           </button>
         ))}
+        <button className="focus:outline-none bg-gray-50 p-1 rounded-md">
+          <IoGrid size={22} />
+        </button>
       </div>
-
-      <button className="focus:outline-none bg-gray-50 p-1 rounded-md">
-        <IoGrid size={22} />
-      </button>
     </div>
   );
 };

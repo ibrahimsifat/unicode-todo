@@ -1,10 +1,12 @@
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 import { useTranslations } from "next-intl";
 import { FaRegEdit } from "react-icons/fa";
 import { FcOk } from "react-icons/fc";
 import { IoCloseCircleSharp } from "react-icons/io5";
 import { MdOutlineDragIndicator } from "react-icons/md";
 import { RiDeleteBin6Line } from "react-icons/ri";
-
+dayjs.extend(relativeTime);
 const TaskItems = ({
   handleEditToggle,
   tasks,
@@ -80,7 +82,6 @@ const TaskItems = ({
                   </div>
                 </div>
               </div>
-
               <span
                 className={`${
                   task.priority == "high" && "bg-red-100 text-red-600"
@@ -92,6 +93,16 @@ const TaskItems = ({
               >
                 {t(`priorityNameList.${task.priority}`)}
               </span>
+
+              {/*  task da*/}
+              <span className="bg-red-100 text-red-600 text-sm font-semibold px-2 py-1 rounded cursor-pointer">
+                {/* {t(`today`)} */}
+                {/* {dayjs(task.dueDate).toNow()} */}
+                {dayjs().diff(task.dueDate, "hour") < 24
+                  ? t(`today`)
+                  : "overdue"}
+              </span>
+
               <button
                 className="text-gray-400 hover:text-gray-600"
                 onClick={() => handleDelete(task._id)}

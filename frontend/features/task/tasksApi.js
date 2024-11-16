@@ -69,7 +69,7 @@ export const tasksApi = apiSlice.injectEndpoints({
 
           const handleTaskDeleted = (deletedTaskId) => {
             updateCachedData((draft) => {
-              draft.data = draft.data.filter(
+              draft.data = draft?.data?.filter(
                 (task) => task._id !== deletedTaskId
               );
             });

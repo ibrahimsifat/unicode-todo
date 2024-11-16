@@ -8,6 +8,7 @@
   },
   "dashboard": {
     "greeting": "مرحبًا",
+    "remaining": "المهام المتبقية",
     "priorityList": {
       "all": "الكل",
       "low": "منخفض",

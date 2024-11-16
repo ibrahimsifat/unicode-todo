@@ -1,6 +1,4 @@
 // hooks/useDashboard.js
-
-import { setPage, setPageSize } from "@/features/pagination/paginationSlice";
 import { useGetTasksQuery } from "@/features/task/tasksApi";
 import { logout } from "@/features/user/userSlice";
 import { signOut } from "next-auth/react";
@@ -44,19 +42,8 @@ const UsePage = () => {
 
   const tasksData = tasks?.data;
 
-  const handlePageChange = (newPage) => {
-    if (newPage > 0 && newPage <= tasksData?.totalPages) {
-      dispatch(setPage(newPage));
-    }
-  };
-
-  const handlePageSizeChange = (size) => {
-    dispatch(setPageSize(size)); // Update page size in Redux store
-    dispatch(setPage(1)); // Reset to page 1 when the page size changes
-  };
-
   if (error) {
-    return <div>Error fetching tasks: {error.message}</div>;
+    return <div>Error fetching tasks: {error}</div>;
   }
 
   return {
@@ -64,8 +51,9 @@ const UsePage = () => {
     setIsFormOpen,
     tasksData,
     handleLogout,
-    handlePageChange,
-    handlePageSizeChange,
+    setIsFormOpen,
+    tasksData,
+    handleLogout,
     page,
     pageSize,
     isLoading,
