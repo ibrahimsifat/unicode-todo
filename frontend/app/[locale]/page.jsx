@@ -2,7 +2,6 @@
 
 import AuthInput from "@/components/AuthInput";
 import Button from "@/components/Button";
-import LoadingSpinner from "@/components/LoadingSpinner";
 import Navbar from "@/components/Navbar";
 import { useTranslations } from "next-intl";
 import UsePage from "./UsePage";
@@ -65,7 +64,6 @@ export default function Home() {
 
             {/* Submit Button */}
             <Button children={t("login")} disabled={status === "loading"} />
-            {status === "loading" && <LoadingSpinner />}
           </form>
 
           {/* Forgot Password Link */}

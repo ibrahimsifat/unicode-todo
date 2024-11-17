@@ -18,13 +18,11 @@ const AssignmentModal = ({ isOpen, onClose, taskId, loginUser }) => {
   const {
     data: taskData,
     isLoading: taskLoading,
-    error: taskError,
     refetch,
   } = useGetTaskQuery(taskId);
   const task = taskData?.task;
   const [
-    addAssignment,
-    { isLoading: addAssignmentLoading, error: addAssignmentError },
+    addAssignment
   ] = useAddAssignmentMutation();
   const [deleteAssignment] = useDeleteAssignmentMutation();
 

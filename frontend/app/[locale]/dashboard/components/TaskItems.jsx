@@ -11,7 +11,15 @@ import { useSelector } from "react-redux";
 import AssignmentModal from "./assignment/AssignmentModal"; // Ensure this import is correct
 
 dayjs.extend(relativeTime);
-
+// Helper function to get priority styles
+const getPriorityStyles = (priority) => {
+  const styles = {
+    high: "bg-red-100 text-red-600",
+    medium: "bg-yellow-100 text-yellow-600",
+    low: "bg-green-100 text-green-600",
+  };
+  return styles[priority] || "";
+};
 const TaskItems = ({
   isTodayTask,
   handleEditToggle,
@@ -25,17 +33,28 @@ const TaskItems = ({
 }) => {
   const t = useTranslations("dashboard");
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentTaskId, setCurrentTaskId] = useState(null); // Added state for current taskId
+  const [currentTaskId, setCurrentTaskId] = useState(null);
   const user = useSelector((state) => state?.user?.user);
 
+  // Modal handlers
   const openModal = (taskId) => {
-    setCurrentTaskId(taskId); // Set the current taskId when modal is opened
+    setCurrentTaskId(taskId);
     setIsModalOpen(true);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
-    setCurrentTaskId(null); // Reset taskId when closing modal
+    setCurrentTaskId(null);
+  };
+
+  // Helper function to get priority styles
+  const getPriorityStyles = (priority) => {
+    const styles = {
+      high: "bg-red-100 text-red-600",
+      medium: "bg-yellow-100 text-yellow-600",
+      low: "bg-green-100 text-green-600",
+    };
+    return styles[priority] || "";
   };
 
   return (
@@ -43,28 +62,13 @@ const TaskItems = ({
       {tasks?.map((task) =>
         editTaskId === task._id ? (
           // Edit Mode View
-          <div
-            className="flex items-center space-x-2 w-full py-3 bg-gray-50 rounded-lg "
-            key={task._id}
-          >
-            <div className="flex items-center space-x-2 mx-3 w-full">
-              <input
-                type="text"
-                value={editTitle}
-                onChange={(e) => setEditTitle(e.target.value)}
-                className="input flex-grow text-md bg-gray-200 w-auto focus:outline-none"
-              />
-              <button onClick={handleEditSave} className="text-green-500">
-                <FcOk size={33} />
-              </button>
-              <button
-                onClick={() => handleEditToggle(task)}
-                className="text-red-500"
-              >
-                <IoCloseCircleSharp size={33} />
-              </button>
-            </div>
-          </div>
+          <TaskEditForm
+            task={task}
+            editTitle={editTitle}
+            setEditTitle={setEditTitle}
+            handleEditSave={handleEditSave}
+            handleEditToggle={handleEditToggle}
+          />
         ) : (
           <div
             key={task._id}
@@ -118,13 +122,9 @@ const TaskItems = ({
                 </div>
               </button>
               <span
-                className={`${
-                  task.priority === "high" && "bg-red-100 text-red-600"
-                } ${
-                  task.priority === "medium" && "bg-yellow-100 text-yellow-600"
-                } ${
-                  task.priority === "low" && "bg-green-100 text-green-600"
-                } text-sm font-semibold px-2 py-1 rounded cursor-pointer`}
+                className={`text-sm font-semibold px-2 py-1 rounded cursor-pointer ${getPriorityStyles(
+                  task.priority
+                )}`}
               >
                 {t(`priorityNameList.${task.priority}`)}
               </span>
@@ -163,3 +163,33 @@ const TaskItems = ({
 };
 
 export default TaskItems;
+
+const TaskEditForm = ({
+  task,
+  editTitle,
+  setEditTitle,
+  handleEditSave,
+  handleEditToggle,
+}) => {
+  return (
+    <div
+      className="flex items-center space-x-2 w-full py-3 bg-gray-50 rounded-lg "
+      key={task._id}
+    >
+      <div className="flex items-center space-x-2 mx-3 w-full">
+        <input
+          type="text"
+          value={editTitle}
+          onChange={(e) => setEditTitle(e.target.value)}
+          className="input flex-grow text-md bg-gray-200 w-auto focus:outline-none"
+        />
+        <button onClick={handleEditSave} className="text-green-500">
+          <FcOk size={33} />
+        </button>
+        <button onClick={() => handleEditToggle(task)} className="text-red-500">
+          <IoCloseCircleSharp size={33} />
+        </button>
+      </div>
+    </div>
+  );
+};

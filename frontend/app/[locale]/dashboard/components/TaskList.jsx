@@ -1,5 +1,6 @@
 "use client";
 import DashboardSkeleton from "@/components/DashboardSkeleton";
+
 import {
   setPage,
   setPageSize,
@@ -12,6 +13,7 @@ import {
   useToggleStatusMutation,
   useUpdateTaskMutation,
 } from "@/features/task/tasksApi";
+import { debounce } from "lodash";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { FcCalendar } from "react-icons/fc";
@@ -70,19 +72,26 @@ const TaskList = ({ isFormOpen, setIsFormOpen }) => {
   const [updateTask] = useUpdateTaskMutation();
 
   // Handle task status toggle
-  const handleStatusChange = async (e, taskId) => {
-    const newStatus = e.target.checked ? "completed" : "pending";
-    await toggleStatus({ id: taskId, status: newStatus });
+  const debouncedToggleStatus = debounce(async (taskId, status) => {
+    await toggleStatus({ id: taskId, status });
     await refetch();
     await todayRefetch();
+  }, 300);
+
+  const handleStatusChange = (e, taskId) => {
+    const newStatus = e.target.checked ? "completed" : "pending";
+    debouncedToggleStatus(taskId, newStatus);
   };
 
   // Handle task deletion
+  const refetchAllTasks = async () => {
+    await Promise.all([refetch(), todayRefetch()]);
+  };
+
   const handleDelete = async (taskId) => {
     try {
       await deleteTask(taskId);
-      await todayRefetch();
-      await refetch();
+      await refetchAllTasks();
     } catch (error) {
       console.error("Failed to delete task:", error);
     }
@@ -164,42 +173,21 @@ const TaskList = ({ isFormOpen, setIsFormOpen }) => {
 
       {/* remaining tasklist */}
       {remainingTask?.length > 0 && (
-        <div className="bg-base-100 collapse collapse-arrow my-6">
-          <input type="checkbox" className="peer" />
-          <div className="collapse-title bg-gray-50 peer-checked:bg-gray-100">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center">
-                <FcCalendar size={20} />
-                <span className="text-lg font-semibold text-gray-700">
-                  {t("remaining")}
-                </span>
-                <span className="bg-gray-200 text-gray-800 text-sm font-medium px-2 mx-3 py-1 rounded">
-                  {remainingTask?.length}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div className="collapse-content bg-gray-100 peer-checked:bg-gray-100">
-            <TaskItems
-              handleEditToggle={handleEditToggle}
-              tasks={remainingTask}
-              editTaskId={editTaskId}
-              editTitle={editTitle}
-              setEditTitle={setEditTitle}
-              handleEditSave={handleEditSave}
-              handleDelete={handleDelete}
-              handleStatusChange={handleStatusChange}
-            />
-            <Pagination
-              page={remainingTaskPage}
-              totalPages={remainingTotalPages}
-              onPageChange={handleRemainingPageChange}
-              onPageSizeChange={handleRemainingPageSizeChange}
-              pageSize={remainingTaskPageSize}
-            />
-          </div>
-        </div>
+        <RemainingTask
+          remainingTask={remainingTask}
+          remainingTotalPages={remainingTotalPages}
+          remainingTaskPageSize={remainingTaskPageSize}
+          remainingTaskPage={remainingTaskPage}
+          handleEditToggle={handleEditToggle}
+          editTaskId={editTaskId}
+          editTitle={editTitle}
+          setEditTitle={setEditTitle}
+          handleEditSave={handleEditSave}
+          handleDelete={handleDelete}
+          handleStatusChange={handleStatusChange}
+          handleRemainingPageChange={handleRemainingPageChange}
+          handleRemainingPageSizeChange={handleRemainingPageSizeChange}
+        />
       )}
 
       {/* New Task Form Toggle */}
@@ -277,10 +265,6 @@ const TodayTask = ({
 };
 
 const RemainingTask = ({
-  remainingTask,
-  remainingTaskPage,
-  remainingTotalPages,
-  remainingTaskPageSize,
   handleEditToggle,
   editTaskId,
   editTitle,
@@ -290,41 +274,48 @@ const RemainingTask = ({
   handleStatusChange,
   handleRemainingPageChange,
   handleRemainingPageSizeChange,
+  remainingTask,
+  remainingTotalPages,
+  remainingTaskPageSize,
+  remainingTaskPage,
 }) => {
-  <div className="bg-base-100 collapse collapse-arrow my-6">
-    <input type="checkbox" className="peer" />
-    <div className="collapse-title bg-gray-50 peer-checked:bg-gray-100">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center">
-          <FcCalendar size={20} />
-          <span className="text-lg font-semibold text-gray-700">
-            {t("remaining")}
-          </span>
-          <span className="bg-gray-200 text-gray-800 text-sm font-medium px-2 mx-3 py-1 rounded">
-            {remainingTask?.length}
-          </span>
+  const t = useTranslations("dashboard");
+  return (
+    <div className="bg-base-100 collapse collapse-arrow my-6">
+      <input type="checkbox" className="peer" />
+      <div className="collapse-title bg-gray-50 peer-checked:bg-gray-100">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center">
+            <FcCalendar size={20} />
+            <span className="text-lg font-semibold text-gray-700">
+              {t("remaining")}
+            </span>
+            <span className="bg-gray-200 text-gray-800 text-sm font-medium px-2 mx-3 py-1 rounded">
+              {remainingTask?.length}
+            </span>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div className="collapse-content bg-gray-100 peer-checked:bg-gray-100">
-      <TaskItems
-        handleEditToggle={handleEditToggle}
-        tasks={remainingTask}
-        editTaskId={editTaskId}
-        editTitle={editTitle}
-        setEditTitle={setEditTitle}
-        handleEditSave={handleEditSave}
-        handleDelete={handleDelete}
-        handleStatusChange={handleStatusChange}
-      />
-      <Pagination
-        page={remainingTaskPage}
-        totalPages={remainingTotalPages}
-        onPageChange={handleRemainingPageChange}
-        onPageSizeChange={handleRemainingPageSizeChange}
-        pageSize={remainingTaskPageSize}
-      />
+      <div className="collapse-content bg-gray-100 peer-checked:bg-gray-100">
+        <TaskItems
+          handleEditToggle={handleEditToggle}
+          tasks={remainingTask}
+          editTaskId={editTaskId}
+          editTitle={editTitle}
+          setEditTitle={setEditTitle}
+          handleEditSave={handleEditSave}
+          handleDelete={handleDelete}
+          handleStatusChange={handleStatusChange}
+        />
+        <Pagination
+          page={remainingTaskPage}
+          totalPages={remainingTotalPages}
+          onPageChange={handleRemainingPageChange}
+          onPageSizeChange={handleRemainingPageSizeChange}
+          pageSize={remainingTaskPageSize}
+        />
+      </div>
     </div>
-  </div>;
+  );
 };

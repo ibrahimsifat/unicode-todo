@@ -53,7 +53,7 @@ const deleteTask = async (taskId, userId) => {
   const task = await getTaskById(taskId);
   if (!task) throw notFound("The task is not found");
 
-  if (task?.user_id?.toString() !== userId?.toString()) {
+  if (task?.task?.user_id?.toString() !== userId?.toString()) {
     throw badRequest("You are not authorized to delete this task");
   }
   await Task.findByIdAndDelete(taskId);
