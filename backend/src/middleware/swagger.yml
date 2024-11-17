@@ -6,7 +6,9 @@ info:
 
 servers:
   - url: https://unicode-todo-vq1q.onrender.com/api/v1
-    description: Local server
+    description: production server
+  - url: http://localhost:5000/api/v1
+    description: development server
 
 components:
   securitySchemes:
