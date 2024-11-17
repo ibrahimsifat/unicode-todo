@@ -4,15 +4,11 @@ const mongoose = require("mongoose");
 const connectDB = async () => {
   try {
     const mongoURI =
-      "mongodb://admin:pass@mongo:27017/unicode?authSource=admin";
+      process.env.MONGO_URL ||
+      "mongodb://admin:pass@172.19.0.2:27017/unicode?authSource=admin";
     console.log("Attempting to connect to MongoDB...");
 
-    const options = {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    };
-
-    const conn = await mongoose.connect(mongoURI, options);
+    const conn = await mongoose.connect(mongoURI);
 
     console.log(`MongoDB Connected: ${conn.connection.host}`);
 

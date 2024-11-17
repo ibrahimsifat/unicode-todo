@@ -7,7 +7,7 @@ services:
       - NODE_ENV=production
       - PORT=5000
       - MONGO_URL=mongodb://admin:pass@mongo:27017/unicode
-      - CORS_ORIGIN=https://your-frontend-domain.com # Update with your frontend domain
+      - CORS_ORIGIN=localhost:3000 # Update with your frontend domain
     ports:
       - "5000:5000"
     networks:
