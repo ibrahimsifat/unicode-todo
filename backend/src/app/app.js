@@ -28,6 +28,15 @@ app.get("/health", (_req, res) => {
     message: "Welcome to the UniCode API",
   });
 });
+app.get("/", (_req, res) => {
+  res.status(200).json({
+    status: 200,
+    health: "/health",
+    apiDocumentation: "/api/v1/api-docs",
+    message: "Welcome to the UniCode Todo API",
+    version: "1.0.0",
+  });
+});
 
 // Handle global error
 app.use((req, res, next) => {

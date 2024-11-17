@@ -106,7 +106,7 @@ const AssignmentModal = ({ isOpen, onClose, taskId, loginUser }) => {
 
   // Loading and error handling
   if (usersLoading || taskLoading) return <LoadingSpinner />;
-  if (usersError || taskError) return <div>Error...</div>;
+  // if (usersError || taskError) return <div>Error...</div>;
 
   return (
     <dialog id="my_modal_3" className={`modal ${isOpen ? "modal-open" : ""}`}>

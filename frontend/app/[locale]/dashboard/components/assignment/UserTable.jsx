@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { IoPersonAddOutline, IoPersonRemoveOutline } from "react-icons/io5";
 
 const UserTable = ({
@@ -6,20 +7,28 @@ const UserTable = ({
   handleAddUser,
   handleRemoveUser,
 }) => {
+  console.log(assignedUsers);
+  const t = useTranslations("dashboard");
   return (
     <div className="overflow-x-auto">
       <table className="table">
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Action</th>
+            <th>{t("photo")}</th>
+            <th>{t("name")}</th>
+            <th>{t("email")}</th>
+            <th>{t("action")}</th>
           </tr>
         </thead>
         <tbody>
           {/* Assigned Users */}
           {assignedUsers?.map((user) => (
             <tr key={user._id}>
+              <td className="avatar">
+                <div className="mask mask-squircle h-12 w-12">
+                  <img src={user?.avatar} alt="Avatar Tailwind CSS Component" />
+                </div>
+              </td>
               <td>{user.name}</td>
               <td>{user.email}</td>
               <td>
@@ -28,7 +37,7 @@ const UserTable = ({
                   onClick={() => handleRemoveUser(user._id)}
                 >
                   <IoPersonRemoveOutline />
-                  <span>Remove</span>
+                  <span>{t("remove")}</span>
                 </button>
               </td>
             </tr>
@@ -37,6 +46,14 @@ const UserTable = ({
           {/* Unassigned Users */}
           {unassignedUsers?.map((user) => (
             <tr key={user._id}>
+              <td className="avatar">
+                <div className="mask mask-squircle h-12 w-12">
+                  <img
+                    src={user.user?.avatar}
+                    alt="Avatar Tailwind CSS Component"
+                  />
+                </div>
+              </td>
               <td>{user.name}</td>
               <td>{user.email}</td>
               <td>
@@ -45,7 +62,7 @@ const UserTable = ({
                   onClick={() => handleAddUser(user._id)}
                 >
                   <IoPersonAddOutline />
-                  <span>Add</span>
+                  <span>{t("add")}</span>
                 </button>
               </td>
             </tr>

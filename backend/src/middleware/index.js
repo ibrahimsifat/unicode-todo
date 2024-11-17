@@ -26,7 +26,7 @@ const applyMiddleware = (app) => {
 
   app.use(cors());
   // openapi specification middleware
-  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDoc));
+  app.use("/api/v1/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDoc));
   app.use(
     OpenApiValidator.middleware({
       apiSpec: apiSpecPath,

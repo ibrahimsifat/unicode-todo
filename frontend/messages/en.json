@@ -13,6 +13,12 @@
     "remaining": "Remaining Tasks",
     "overdue": "Overdue",
     "next": "Next",
+    "add": "Add",
+    "email": "Email",
+    "name": "Name",
+    "action": "Action",
+    "remove": "Remove",
+    "photo": "Photo",
     "priorityList": {
       "all": "All",
       "low": "Low",
