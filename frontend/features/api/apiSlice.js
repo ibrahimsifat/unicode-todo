@@ -4,7 +4,7 @@ import { logout } from "../auth/authSlice";
 
 // Define baseQuery with Authorization headers
 const baseQuery = fetchBaseQuery({
-  baseUrl: `https://unicode-todo-vq1q.onrender.com/api/v1`,
+  baseUrl: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/`,
   prepareHeaders: async (headers, { getState }) => {
     // Get the accessToken from Redux store
     const session = await getSession();
