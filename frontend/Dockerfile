@@ -1,63 +1,23 @@
-# Dockerfile
-FROM node:20-alpine AS base
+# Base image
+FROM node:20-alpine
 
-# Install dependencies only when needed
-FROM base AS deps
+# Set working directory
 WORKDIR /app
 
-# Install all dependencies, including dev dependencies
+# Copy package files first for better caching
 COPY package.json yarn.lock ./
+
+# Install dependencies
 RUN yarn install --frozen-lockfile
 
-# Rebuild the source code only when needed
-FROM base AS builder
-WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
+# Copy the rest of the application
 COPY . .
 
-# Next.js collects completely anonymous telemetry data about general usage.
-# Learn more here: https://nextjs.org/telemetry
-# Uncomment the following line in case you want to disable telemetry during the build.
-# ENV NEXT_TELEMETRY_DISABLED 1
+# Build the application
+RUN yarn build
 
-# Development image, copy all files
-FROM base AS development
-WORKDIR /app
-
-# Copy project files
-COPY --from=deps /app/node_modules ./node_modules
-COPY . .
-
-# Set environment variables
-ENV NODE_ENV=development
-ENV NEXT_TELEMETRY_DISABLED 1
-
-# Expose port 3000
+# Expose port
 EXPOSE 3000
 
-# Start Next.js in development mode
-CMD ["yarn", "dev"]
-
-# Production image, copy all the files and run next
-FROM base AS runner
-WORKDIR /app
-
-ENV NODE_ENV=production
-ENV NEXT_TELEMETRY_DISABLED 1
-
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-
-COPY --from=builder /app/public ./public
-
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
-
-USER nextjs
-
-EXPOSE 3000
-
-ENV PORT 3000
-ENV HOSTNAME localhost
-
-CMD ["yarn", "run", "dev"]
+# Start the application
+CMD ["yarn", "start"]
