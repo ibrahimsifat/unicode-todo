@@ -4,7 +4,7 @@ import { logout } from "../auth/authSlice";
 
 // Define baseQuery with Authorization headers
 const baseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost:5000/api/v1/", // Your API base URL
+  baseUrl: `${process.env.NEXT_PUBLIC_API_URL}/api/v1/`,
   prepareHeaders: async (headers, { getState }) => {
     // Get the accessToken from Redux store
     const session = await getSession();

@@ -14,7 +14,7 @@ const handler = NextAuth({
         try {
           // Make a request to backend to authenticate the user
           const response = await axios.post(
-            "http://localhost:5000/api/v1/auth/login/local",
+            `${process.env.NEXT_PUBLIC_API_URL}/auth/login/local`,
             {
               email: credentials.email,
               password: credentials.password,
