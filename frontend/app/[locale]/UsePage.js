@@ -30,8 +30,6 @@ const UsePage = () => {
 
     if (res.error) {
       setError(res.error); // Set error if login fails
-    } else {
-      router.push(`/${locale}/dashboard`); // Redirect on successful login
     }
   };
 
