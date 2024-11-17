@@ -8,7 +8,6 @@ const UserTable = ({
   handleAddUser,
   handleRemoveUser,
 }) => {
-  console.log(assignedUsers, unassignedUsers);
   const t = useTranslations("dashboard");
 
   // Motion variants for smoother row transitions

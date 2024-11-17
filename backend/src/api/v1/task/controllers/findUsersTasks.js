@@ -7,17 +7,20 @@ const taskService = require("../../../../lib/task");
  * @returns {void}
  */
 const findUsersTasks = async (req, res, next) => {
-  const { page, pageSize, priority, todaytask } = req.query;
+  let { page, pageSize, priority, todaytask, userId } = req.query;
   const filteredPriority = priority === "all" ? null : priority;
 
+  if (!userId) {
+    userId = req.user.id;
+  }
   try {
-    const tasks = await taskService.getTasksByUser(
-      req.user.id,
+    const tasks = await taskService.getTasksByUser({
+      userId,
       page,
       pageSize,
-      filteredPriority,
+      priority: filteredPriority,
       todaytask,
-    );
+    });
     res.status(200).json(tasks);
   } catch (error) {
     next(error);

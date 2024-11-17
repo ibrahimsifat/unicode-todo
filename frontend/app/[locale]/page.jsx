@@ -123,6 +123,10 @@ export default function Home() {
 // Demo login credentials
 const demoUsers = [
   {
+    email: "johndoe@example.com",
+    password: "pass123",
+  },
+  {
     email: "ibrahim@gmail.com",
     password: "pass123",
   },

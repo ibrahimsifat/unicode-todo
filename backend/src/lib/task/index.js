@@ -70,18 +70,19 @@ const deleteTask = async (taskId, userId) => {
 const DEFAULT_PAGE = 1;
 const DEFAULT_PAGE_SIZE = 4;
 
-const getTasksByUser = async (
+const getTasksByUser = async ({
   userId,
   page = DEFAULT_PAGE,
   pageSize = DEFAULT_PAGE_SIZE,
   priority,
   todaytask,
-) => {
+}) => {
   const parsedPage = Math.max(parseInt(page, 10), 1);
   const parsedPageSize = Math.max(parseInt(pageSize, 10), 1); // Ensures pageSize is at least 1
 
   // Build the query dynamically based on priority
   const query = { user_id: userId };
+  console.log("userId", userId);
   if (priority) {
     query.priority = priority; // Only add priority if it's provided
   }

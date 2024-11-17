@@ -6,10 +6,10 @@ import { logout } from "../auth/authSlice";
 const baseQuery = fetchBaseQuery({
   baseUrl: `${process.env.NEXT_PUBLIC_API_URL}/api/v1`,
   prepareHeaders: async (headers, { getState }) => {
-    // Get the accessToken from Redux store
+    // Get the current session to get the accessToken
     const session = await getSession();
 
-    const token = session?.accessToken;
+    const token = session?.accessToken; // Get the latest token from session
 
     if (token) {
       headers.set("Authorization", `Bearer ${token}`); // Add token to Authorization header
