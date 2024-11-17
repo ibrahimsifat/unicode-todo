@@ -11,7 +11,7 @@ const Pagination = ({
 }) => {
   const t = useTranslations("dashboard");
   return (
-    <div className="flex flex-col items-center space-y-6 py-6 bg-gray-50 rounded-xl max-w-2xl p-8 mx-auto">
+    <div className="flex flex-col items-center space-y-6 py-6 bg-gray-50 rounded-xl max-w-2xl p-8 mx-auto my-4">
       <div className="flex items-center space-x-6">
         {/* Previous Button */}
         <button

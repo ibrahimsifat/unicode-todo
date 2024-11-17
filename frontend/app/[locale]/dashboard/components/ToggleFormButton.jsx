@@ -1,13 +1,29 @@
+import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
+import { memo, useCallback } from "react";
 import { MdOutlineKeyboardCommandKey } from "react-icons/md";
-const ToggleFormButton = ({ isFormOpen, setIsFormOpen }) => {
+
+// Memoized ToggleFormButton to prevent unnecessary re-renders
+const ToggleFormButton = memo(({ isFormOpen, setIsFormOpen }) => {
   const t = useTranslations("dashboard");
+
+  // Memoize the toggle function to prevent re-creations on every render
+  const handleToggle = useCallback(() => {
+    setIsFormOpen((prev) => !prev);
+  }, [setIsFormOpen]);
+
   return (
-    <button
-      className="flex items-center justify-center w-full py-2 mt-4 text-gray-600 hover:text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md border-2 border-dashed border-gray-300"
-      onClick={() => setIsFormOpen(!isFormOpen)}
+    <motion.button
+      className="flex items-center justify-between w-full py-2 mt-4 text-gray-600 hover:text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md border-2 border-dashed border-gray-300 transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+      onClick={handleToggle} // Use the memoized toggle function
+      aria-label={isFormOpen ? "Close new task form" : "Open new task form"}
+      whileHover={{ scale: 1.05 }} // Slightly scale the button on hover
+      whileTap={{ scale: 0.98 }} // Slightly shrink the button on click
+      animate={{ opacity: 1 }} // Ensures the button opacity remains 100%
+      initial={{ opacity: 0 }} // Fade-in effect when component mounts
+      transition={{ duration: 0.3 }} // Smooth transition
     >
-      <div className="w-11/12 flex items-center justify-between">
+      <div className="w-11/12 flex items-center justify-between mx-auto">
         <div className="flex items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -33,8 +49,8 @@ const ToggleFormButton = ({ isFormOpen, setIsFormOpen }) => {
           </span>
         </div>
       </div>
-    </button>
+    </motion.button>
   );
-};
+});
 
 export default ToggleFormButton;

@@ -9,6 +9,7 @@
     "copyCredentials": "نسخ البيانات"
   },
   "dashboard": {
+    "assign_users": "تعيين المستخدمين للمهمة",
     "greeting": "مرحبًا",
     "remaining": "المهام المتبقية",
     "overdue": "متأخر",

@@ -19,6 +19,7 @@
     "action": "Action",
     "remove": "Remove",
     "photo": "Photo",
+    "assign_users": "Assign Users to Task",
     "priorityList": {
       "all": "All",
       "low": "Low",

@@ -1,6 +1,5 @@
 "use client";
 import DashboardSkeleton from "@/components/DashboardSkeleton";
-
 import {
   setPage,
   setPageSize,
@@ -15,7 +14,7 @@ import {
 } from "@/features/task/tasksApi";
 import { debounce } from "lodash";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { FcCalendar } from "react-icons/fc";
 import { useDispatch, useSelector } from "react-redux";
 import Header from "./Header";
@@ -30,6 +29,7 @@ const TaskList = ({ isFormOpen, setIsFormOpen }) => {
   const dispatch = useDispatch();
   const [editTaskId, setEditTaskId] = useState(null);
   const [editTitle, setEditTitle] = useState("");
+
   const page = useSelector((state) => state.pagination.page);
   const pageSize = useSelector((state) => state.pagination.pageSize);
   const remainingTaskPage = useSelector(
@@ -40,33 +40,39 @@ const TaskList = ({ isFormOpen, setIsFormOpen }) => {
   );
   const priority = useSelector((state) => state.pagination.priority);
 
-  const todayQuery = {
-    page,
-    pageSize,
-    priority,
-    todaytask: true,
-  };
+  const todayQuery = useMemo(
+    () => ({
+      page,
+      pageSize,
+      priority,
+      todaytask: true,
+    }),
+    [page, pageSize, priority]
+  );
+
+  const query = useMemo(
+    () => ({
+      page: remainingTaskPage,
+      pageSize: remainingTaskPageSize,
+      priority,
+      todaytask: false,
+    }),
+    [remainingTaskPage, remainingTaskPageSize, priority]
+  );
+
   const {
     data: todayData,
     refetch: todayRefetch,
     isLoading: todayIsLoading,
     isError: todayIsError,
-  } = useGetTasksQuery({ ...todayQuery });
-
-  const query = {
-    page: remainingTaskPage,
-    pageSize: remainingTaskPageSize,
-    priority,
-    todaytask: false,
-  };
-  const { data, refetch, isLoading, isError } = useGetTasksQuery({ ...query });
+  } = useGetTasksQuery(todayQuery);
+  const { data, refetch, isLoading, isError } = useGetTasksQuery(query);
 
   const remainingTask = data?.data.tasks;
   const remainingTotalPages = data?.data.totalPages;
-
-  // Today task
   const todayTask = todayData?.data.tasks;
   const todayTotalPages = todayData?.data.totalPages;
+
   const [toggleStatus] = useToggleStatusMutation();
   const [deleteTask] = useDeleteTaskMutation();
   const [updateTask] = useUpdateTaskMutation();
@@ -114,6 +120,7 @@ const TaskList = ({ isFormOpen, setIsFormOpen }) => {
       console.error("Failed to update task:", error);
     }
   };
+
   // Handle page change for today's tasks
   const handlePageChange = (newPage) => {
     if (newPage > 0 && newPage <= todayTotalPages) {
@@ -122,7 +129,7 @@ const TaskList = ({ isFormOpen, setIsFormOpen }) => {
   };
 
   const handlePageSizeChange = (size) => {
-    dispatch(setPageSize(size)); // Update page size in Redux store
+    dispatch(setPageSize(size));
     dispatch(setPage(1)); // Reset to page 1 when the page size changes
   };
 
@@ -139,13 +146,12 @@ const TaskList = ({ isFormOpen, setIsFormOpen }) => {
     dispatch(setRemainingTaskPage(1));
   };
 
-  if (isLoading) <DashboardSkeleton />;
-
-  if (isError) return <div className="text-red-500">Error loading tasks.</div>;
+  if (todayIsLoading || isLoading) return <DashboardSkeleton />;
+  if (todayIsError || isError)
+    return <div className="text-red-500">Error loading tasks.</div>;
 
   return (
     <div className="w-full max-w-3xl mx-auto p-8 bg-white rounded-xl mt-10">
-      {/* Greeting Section */}
       <Header />
 
       {/* Task List for Today */}
@@ -171,13 +177,13 @@ const TaskList = ({ isFormOpen, setIsFormOpen }) => {
         <TaskNotFound headerTitle={t("today")} taskLength={todayTask?.length} />
       )}
 
-      {/* remaining tasklist */}
+      {/* Remaining task list */}
       {remainingTask?.length > 0 && (
         <RemainingTask
           remainingTask={remainingTask}
           remainingTotalPages={remainingTotalPages}
-          remainingTaskPageSize={remainingTaskPageSize}
           remainingTaskPage={remainingTaskPage}
+          remainingTaskPageSize={remainingTaskPageSize}
           handleEditToggle={handleEditToggle}
           editTaskId={editTaskId}
           editTitle={editTitle}

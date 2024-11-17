@@ -2,29 +2,19 @@ import { setPriority } from "@/features/pagination/paginationSlice";
 import { useGetTasksQuery } from "@/features/task/tasksApi";
 import dayjs from "dayjs";
 import "dayjs/locale/ar";
+import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { FaFilter } from "react-icons/fa";
 import { IoGrid } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 
 const priorityData = [
-  {
-    name: "All",
-    value: "all",
-  },
-  {
-    name: "High",
-    value: "high",
-  },
-  {
-    name: "Medium",
-    value: "medium",
-  },
-  {
-    name: "Low",
-    value: "low",
-  },
+  { name: "All", value: "all" },
+  { name: "High", value: "high" },
+  { name: "Medium", value: "medium" },
+  { name: "Low", value: "low" },
 ];
+
 const Header = () => {
   const t = useTranslations("dashboard");
   const priorityValue = useSelector((state) => state.pagination.priority);
@@ -42,13 +32,11 @@ const Header = () => {
   };
   const { refetch, isLoading, isError } = useGetTasksQuery({ ...todayQuery });
 
-  // handle priority change
+  // Handle priority change
   const handlePriorityChange = (value) => {
     dispatch(setPriority(value));
     refetch();
   };
-
-  // const { locale } = useRouter(); // Get the current locale from the router
 
   // Get the current day name
   const currentDay = dayjs().format("dddd").toLowerCase();
@@ -59,33 +47,57 @@ const Header = () => {
   // Get the current date in the format: Day, Date Month Year
   const formattedDate = dayjs().format("D M YYYY");
 
-  // translate the priority options
+  // Translate the priority options
   const translatedPriorityOptions = priorityData.map((option) => ({
     ...option,
-    label: t(`priorityNameList.${option.value}`), // Translate using the key for the label
+    label: t(`priorityNameList.${option.value}`),
   }));
 
-  // console.log(translatedPriorityOptions);
+  // Animation Variants
+  const containerVariants = {
+    hidden: { opacity: 0, y: -10 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
+  };
+
+  const buttonVariants = {
+    hover: { scale: 1.1, transition: { duration: 0.2 } },
+    tap: { scale: 0.95 },
+  };
+
   return (
-    <div className="md:flex md:items-center md:justify-between mb-6 md:space-y-0 space-y-4">
+    <motion.div
+      className="md:flex md:items-center md:justify-between mb-6 md:space-y-0 space-y-4"
+      initial="hidden"
+      animate="visible"
+      variants={containerVariants}
+    >
       <div>
-        <h1 className="lg:text-2xl md:text-xl text-lg font-semibold text-gray-800">
+        <motion.h1
+          className="lg:text-2xl md:text-xl text-lg font-semibold text-gray-800"
+          variants={containerVariants}
+        >
           {t("greeting")}, {user?.name || "Camero"}
           <span role="img" aria-label="smiling face">
             🤩
           </span>
-        </h1>
-        <p className="text-sm text-gray-500 mt-1">
-          {/* <span>{t("todayIs")}</span> {formattedDate} */}
+        </motion.h1>
+        <motion.p
+          className="text-sm text-gray-500 mt-1"
+          variants={containerVariants}
+        >
           <span>{t("todayIs")}</span> {translatedDay}, {formattedDate}
-          {/* It's {formattedDate} */}
-        </p>
+        </motion.p>
       </div>
 
-      <div className="flex items-center space-x-2">
+      <motion.div
+        className="flex items-center space-x-2"
+        initial="hidden"
+        animate="visible"
+        variants={containerVariants}
+      >
         <FaFilter size={20} />
         {translatedPriorityOptions.map((priority) => (
-          <button
+          <motion.button
             key={priority.value}
             onClick={() => handlePriorityChange(priority.value)}
             className={`px-3 rounded-full text-sm ${
@@ -93,15 +105,23 @@ const Header = () => {
                 ? "bg-[#2F2B43] text-white"
                 : "bg-gray-200"
             } transition duration-200 hover:bg-[#110f1d] hover:text-white focus:outline-none`}
+            variants={buttonVariants}
+            whileHover="hover"
+            whileTap="tap"
           >
             {priority.label}
-          </button>
+          </motion.button>
         ))}
-        <button className="focus:outline-none bg-gray-50 p-1 rounded-md">
+        <motion.button
+          className="focus:outline-none bg-gray-50 p-1 rounded-md"
+          variants={buttonVariants}
+          whileHover="hover"
+          whileTap="tap"
+        >
           <IoGrid size={22} />
-        </button>
-      </div>
-    </div>
+        </motion.button>
+      </motion.div>
+    </motion.div>
   );
 };
 

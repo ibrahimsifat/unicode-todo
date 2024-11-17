@@ -1,4 +1,5 @@
 import { useAddTaskMutation, useGetTasksQuery } from "@/features/task/tasksApi";
+import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { IoMdCloseCircle } from "react-icons/io";
@@ -75,16 +76,25 @@ const InsertTodoForm = ({ isFormOpen, setIsFormOpen }) => {
   };
 
   // translate the priority options
-
-  // Update the labels with translations
   const translatedOptions = priorityOptions.map((option) => ({
     ...option,
     label: t(`priorityList.${option.value}`), // Translate using the key for the label
   }));
+
   return (
-    <div>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.9 }}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
+    >
       <form onSubmit={handleAddTask}>
-        <div className="flex items-center bg-gray-100 px-4 py-4 rounded-lg my-6">
+        <motion.div
+          className="flex items-center bg-gray-100 px-4 py-4 rounded-lg my-6"
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+        >
           <MdOutlineEditNote size={35} />
 
           <input
@@ -126,24 +136,31 @@ const InsertTodoForm = ({ isFormOpen, setIsFormOpen }) => {
             onChange={handleOnChange}
           />
 
-          <button
-            type="submit"
-            className={`appearance-none w-8 h-8 bg-no-repeat bg-contain hover:bg-gray-200 rounded-md `}
+          <motion.button
+            type="button"
             onClick={() => setIsFormOpen(!isFormOpen)}
+            className="appearance-none w-8 h-8 bg-no-repeat bg-contain hover:bg-gray-200 rounded-md"
+            whileHover={{ scale: 1.2 }}
+            whileTap={{ scale: 0.95 }}
           >
             <IoMdCloseCircle size={30} color="red" />
-          </button>
-        </div>
+          </motion.button>
+        </motion.div>
         <SubmitButton />
       </form>
-    </div>
+    </motion.div>
   );
 };
 
 const SubmitButton = () => {
   const t = useTranslations("dashboard");
   return (
-    <button className="flex items-center justify-center w-full py-2 mt-4 text-gray-100 hover:text-gray-300 bg-[#2F2B43] hover:bg-[#3d365f] rounded-md border-2 border-gray-300">
+    <motion.button
+      className="flex items-center justify-center w-full py-2 mt-4 text-gray-100 hover:text-gray-300 bg-[#2F2B43] hover:bg-[#3d365f] rounded-md border-2 border-gray-300"
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      transition={{ type: "spring", stiffness: 300 }}
+    >
       <div className="w-11/12 flex items-center justify-center">
         <div className="flex items-center">
           <svg
@@ -162,7 +179,7 @@ const SubmitButton = () => {
           <span className="text-sm font-semibold">{t("addTask")}</span>
         </div>
       </div>
-    </button>
+    </motion.button>
   );
 };
 
