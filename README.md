@@ -5,7 +5,7 @@ A full-stack task management application with real-time updates, assignment capa
 ## 📝 Documentation & Demo
 
 - [View Full Documentation](https://ibrahimsifat.notion.site/UNICODE-TODO-13c5ac2bfa4980fabb78f6fd85790dfa?pvs=4)
-- [Watch Demo Video](https://youtube.com/watch?v=demo) <!-- Replace with actual video link -->
+- [Watch Demo Video](https://youtu.be/eWlplbs3nCo)
 
 ## ✨ Features
 
@@ -56,10 +56,41 @@ git clone https://github.com/ibrahimsifat/unicode-todo.git
 cd unicode-todo
 ```
 
-2. **Install dependencies**
+2. **Backend**
 
 ```bash
-npm install
+cd backend
+```
+
+# Development
+
+```
+docker-compose -f docker-compose.dev.yml up --build
+```
+
+# Production
+
+```
+docker-compose -f docker-compose.prod.yml up --build
+```
+
+# Services will be available at:
+
+- Frontend: http://localhost:3000 (running locally)
+- Backend API: http://localhost:5000
+- MongoDB: localhost:27017
+- Mongo Express: http://localhost:8081
+
+3. **FrontEnd**
+
+```bash
+cd frontend
+```
+
+Start the development environment:
+
+```bash
+docker compose up
 ```
 
 3. **Set up environment variables**
@@ -73,6 +104,8 @@ cp .env.example .env.local
 ```bash
 npm run dev
 ```
+
+The application will run on http://localhost:3000
 
 ## 🤝 Contributing
 

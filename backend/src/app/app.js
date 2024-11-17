@@ -4,7 +4,11 @@ const http = require("http");
 const applyMiddleware = require("../middleware");
 const indexRoute = require("../routes");
 const setupSocket = require("../lib/socket"); // Import the socket setup function
+const connectDB = require("../config/db");
 const app = express();
+
+// Connect to MongoDB
+connectDB();
 
 // Create an HTTP server to use with Socket.IO
 const server = http.createServer(app);
