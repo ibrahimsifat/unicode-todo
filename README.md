@@ -2,10 +2,15 @@
 
 A full-stack task management application with real-time updates, assignment capabilities, and multi-language support.
 
-## 📝 Documentation & Demo
+## 📝 Documentation & Demo , Diagrams
 
-- [View Full Documentation](https://ibrahimsifat.notion.site/UNICODE-TODO-13c5ac2bfa4980fabb78f6fd85790dfa?pvs=4)
-- [Watch Demo Video](https://youtu.be/eWlplbs3nCo)
+- [Frontend](https://unicode-todo.vercel.app/)
+- [Backend API](https://unicode-todo-vq1q.onrender.com/api/v1/api-docs/)
+- [Feature Video](https://youtu.be/gHwO_4W4h2w)
+- [Project Documentation](https://ibrahimsifat.notion.site/UNICODE-TODO-13c5ac2bfa4980fabb78f6fd85790dfa)
+- [ER Diagram](https://drive.google.com/file/d/1NxNJhpCWooz29v22M0q7SqsiE8tVPKDA/view?usp=sharing)
+- [Application Flow Diagram](https://www.mermaidchart.com/raw/1474b543-6664-4a19-913f-d6c26b42b100?theme=light&version=v0.1&format=svg)
+- [Component Tree Diagram](https://www.mermaidchart.com/raw/195c8386-b644-4ec8-958b-8ad8c42c071f?theme=light&version=v0.1&format=svg)
 
 ## ✨ Features
 
@@ -62,19 +67,23 @@ cd unicode-todo
 cd backend
 ```
 
-# Development
+**_Development_**
+
+```bash
+cp .env.example .env
+```
 
 ```
 docker-compose -f docker-compose.dev.yml up --build
 ```
 
-# Production
+**_Production_**
 
 ```
 docker-compose -f docker-compose.prod.yml up --build
 ```
 
-# Services will be available at:
+**Services will be available at:**
 
 - Frontend: http://localhost:3000 (running locally)
 - Backend API: http://localhost:5000
@@ -99,12 +108,6 @@ docker compose up
 cp .env.example .env.local
 ```
 
-4. **Run the development server**
-
-```bash
-npm run dev
-```
-
 The application will run on http://localhost:3000
 
 ## 🤝 Contributing
@@ -127,12 +130,6 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 For support, email ibrahimsifat.me@gmail.com
 
-## 🌟 Acknowledgments
-
-- Thanks to all contributors who have helped shape this project
-- Special thanks to the React and Next.js communities
-- Inspired by various open-source todo applications
-
 ---
 
-Made with ❤️ by [Ibrahim Sifat]
+Made with ❤️ by [Ibrahim Sifat](https://github.com/ibrahimsifat)
